@@ -23,7 +23,7 @@ pub const MAX_SPACE_TONE_DB: f32 = 24.0;
 /// The lowest corner a space's high cut may carry. **Chosen from measurement**: on a tone curve with
 /// every band at the tenth percentile of the owner's pack's clamped fits, the fit's band model came
 /// within 0.77 dB worst with its floor here, 1.29 dB at 1.5 kHz and 2.96 dB at 2 kHz (this crate's
-/// `AGENTS.md`). *Derived*: the cut is 3 dB down at its corner and
+/// `NOTES.md`). *Derived*: the cut is 3 dB down at its corner and
 /// `TONE_REFERENCE_HZ` is 1 kHz, so the tone's normalisation never lifts the rest of the curve by
 /// more than 3 dB.
 pub const MIN_HIGH_CUT_HZ: f32 = 1_000.0;

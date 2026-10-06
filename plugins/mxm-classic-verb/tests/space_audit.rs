@@ -74,7 +74,7 @@ fn shortest() -> usize {
 
 /// **How the tolerances were chosen.** Every factory space rendered as generated, again through
 /// `Loaded`, and again after each small change to its controls or its space, with every descriptor's
-/// worst movement printed. Run it in release and read it against `AGENTS.md`, *The space audit*:
+/// worst movement printed. Run it in release and read it against `NOTES.md`, *The space audit*:
 ///
 /// ```bash
 /// cargo test -p mxm-classic-verb --release --test space_audit -- --ignored --nocapture

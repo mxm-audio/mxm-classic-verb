@@ -5,9 +5,10 @@ AGENTS.md is the contract; this file is the reference it links to.
 
 ## Files
 
-`Cargo.toml`, `LICENSE`, `README.md`, `control-map.json`, `presets/`, `spaces/` (the factory spaces'
+`Cargo.toml`, `README.md`, `control-map.json`, `presets/`, `spaces/` (the factory spaces'
 committed fit reports), `examples/` (`classic_verb_space_audit`), `tests/` (`space_audit.rs` and its
-shared `audit/mod.rs`) and `src/`:
+shared `audit/mod.rs`) and `src/` (no `LICENSE` here since the split: the repository's root `LICENSE`
+covers it):
 
 - `lib.rs` — identity, layouts, activity, the background task, `filter_state`, and the block-start
   read of the loaded space.
@@ -458,7 +459,7 @@ control's gestures are bracketed in `editor/binding.rs`, a fit's in `loading.rs`
 thread reads editor state; telemetry stays atomics. An effect has no developer channel.
 
 - **Every card is a `mxm_ui::tree`, and its floor is computed** (mxm-kit's `crates/ui/AGENTS.md`, *A card
-  body as data*). `sections::card` describes each body once — the Space selector filling its row,
+  body as data*; now its [`crates/ui/NOTES.md`](https://github.com/mxm-audio/mxm-kit/blob/main/crates/ui/NOTES.md#a-card-body-as-data--tree)). `sections::card` describes each body once — the Space selector filling its row,
   the load line, the decay display, the collection's knob rows (`tree::knob_row`), the Decay shape pictures — and
   that description is measured for the card's floor and height and drawn leaf by leaf through the
   bindings (`sections::paint`), through `paging::editor::show`. Each floor is the tree's

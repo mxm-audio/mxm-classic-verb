@@ -16,10 +16,11 @@ contract — live in the parent and are not restated here.
 
 # Ownership
 
-`Cargo.toml`, `LICENSE`, `README.md`, `control-map.json`, `presets/`, `spaces/` (the factory spaces'
+`Cargo.toml`, `README.md`, `control-map.json`, `presets/`, `spaces/` (the factory spaces'
 committed fit reports), `examples/` (`classic_verb_space_audit`), `tests/` (`space_audit.rs` and its
 shared `audit/mod.rs`) and `src/`; what each source file holds: [NOTES.md § Files](NOTES.md#files).
 `src/spaces/generated.rs` is **generated** and never edited by hand; `src/testing.rs` is test-only.
+No per-plugin `LICENSE` since the split (2026-10-06): the repository's root `LICENSE` covers it.
 
 # Local Contracts
 
@@ -191,7 +192,7 @@ cargo test -p mxm-classic-verb-host-tests --test effect_chain   # skips without 
 Manual gates remain: owner listening; **a native drop of the owner's WAV and AIFF responses** onto the
 Space card in the Player and in Bitwig, with a preset and a project saved and reopened; the editor's
 native §15 review in both themes, with 100 %, 150 % and 200 % zoom at a fixed physical window;
-Player audition; and Bitwig. Linux and macOS are not verified on the Windows development machine.
+Player audition; and Bitwig. Linux and macOS are not verified on the Windows development machine. *Since the split (2026-10-06):* the tests run on Linux in WSL before a push, on macOS by CI on `v*` tags.
 
 # Child DOX Index
 

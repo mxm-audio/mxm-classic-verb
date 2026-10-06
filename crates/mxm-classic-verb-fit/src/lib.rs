@@ -40,7 +40,7 @@
 //! | Verification | The fitted reverb rendered and analysed by the same analyser | `fit` |
 //!
 //! Every constant below says whether it is the research page's, derived, measured or chosen, and
-//! the crate's `AGENTS.md` carries the measurements behind each.
+//! the crate's `NOTES.md` carries the measurements behind each.
 
 mod analysis;
 mod band;

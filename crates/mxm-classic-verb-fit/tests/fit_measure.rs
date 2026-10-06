@@ -1,4 +1,4 @@
-//! The fit's measurements that no default test prints, for the crate's `AGENTS.md`, *Measured accuracy —
+//! The fit's measurements that no default test prints, for the crate's `NOTES.md`, *Measured accuracy —
 //! the fit*: the dense onsets, the steep tilts, the high cut on planted rooms, the pack's aggregate tone
 //! curves and the fit's cost. Every test here is ignored and asserts nothing. Run them in release, one
 //! at a time so the cost is not measured under the others' load:
@@ -68,7 +68,7 @@ fn optional(value: Option<f32>, scale: f32, decimals: usize) -> String {
     value.map_or("-".to_string(), |v| format!("{:+.*}", decimals, v * scale))
 }
 
-/// Everything the tables in `AGENTS.md` read from one fit.
+/// Everything the tables in `NOTES.md` read from one fit.
 fn summary(result: &Fit) -> String {
     let (c, r) = (result.controls, &result.report);
     let e = &r.errors;

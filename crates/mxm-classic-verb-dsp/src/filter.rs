@@ -251,7 +251,7 @@ impl Tilt {
 /// the corner at every rate, maximally flat below it, never above unity, and zero at Nyquist.
 ///
 /// **Why second order**, measured through the fit's band model on tone curves built from the owner's
-/// pack's aggregate figures (this crate's `AGENTS.md`): a first-order cut cannot fall 9 dB an octave
+/// pack's aggregate figures (this crate's `NOTES.md`): a first-order cut cannot fall 9 dB an octave
 /// faster than a white field between 4 and 8 kHz without denting 2 kHz by 3–4 dB; third and fourth
 /// order fall too abruptly for a tone that darkens gradually. The corner is in hertz, held below 0.45
 /// of the sample rate as every corner in this crate is. `None` is an open cut.

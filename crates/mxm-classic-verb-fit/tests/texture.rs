@@ -275,7 +275,8 @@ impl Range {
 }
 
 /// **How the tolerances were argued.** Every plant over its population, each reading's range per
-/// segment printed. Run it in release and read it against `AGENTS.md`, *The tail texture*:
+/// segment printed. Run it in release and read it against `NOTES.md`, *The tail texture —
+/// measured*:
 ///
 /// ```bash
 /// cargo test -p mxm-classic-verb-fit --release --test texture -- --ignored --nocapture

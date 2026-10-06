@@ -313,8 +313,8 @@ pub fn page_items(ui: &Ui, params: &MxmClassicVerbParams) -> Vec<mxm_ui::paging:
 }
 
 /// Everything a leaf draws with, and what the frame read once before anything was drawn: the wet
-/// level (`plugins/AGENTS.md`: destructive telemetry is read once) and whether a file is held over
-/// the Space card.
+/// level (mxm-kit's `docs/plugin-conventions.md`, *Editor contract*: destructive telemetry is read
+/// once) and whether a file is held over the Space card.
 pub struct Live<'a, 'b> {
     pub params: &'a MxmClassicVerbParams,
     pub setter: &'a ParamSetter<'b>,
@@ -689,7 +689,7 @@ pub(crate) fn controls(p: &MxmClassicVerbParams) -> Controls {
 }
 
 /// The frequencies the display's three lines stand for: the low, mid and high octave bands the DSP
-/// crate measured its prediction against (`crates/mxm-classic-verb-dsp/AGENTS.md`).
+/// crate measured its prediction against (`crates/mxm-classic-verb-dsp/NOTES.md`).
 pub(crate) const BANDS_HZ: [f32; 3] = [125.0, 1_000.0, 8_000.0];
 const BAND_LABELS: [&str; 3] = ["125 Hz", "1 kHz", "8 kHz"];
 /// The rate the prediction is evaluated at. The editor is never told the host's rate; the decay
@@ -761,7 +761,7 @@ pub(crate) fn picture(params: &MxmClassicVerbParams) -> Picture {
 }
 
 /// A shaped decay's envelope at a fraction `u` of its length: flat for gated, rising as u² for
-/// reverse. The DSP crate's shapes (`crates/mxm-classic-verb-dsp/AGENTS.md`, *Shaped decays live
+/// reverse. The DSP crate's shapes (`crates/mxm-classic-verb-dsp/NOTES.md`, *Shaped decays live
 /// outside the loop*), restated here because that crate keeps its tap gains private.
 fn envelope(shape: DecayShape, u: f32) -> f32 {
     match shape {

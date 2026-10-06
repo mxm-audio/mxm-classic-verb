@@ -6,7 +6,7 @@
 //! fitted from.
 //!
 //! Shared by `examples/classic_verb_space_audit.rs` and `tests/space_audit.rs`. The tolerances and the
-//! measurement they were chosen from are in `AGENTS.md`, *The space audit*.
+//! measurement they were chosen from are in `NOTES.md`, *The space audit*.
 #![allow(dead_code)]
 
 use std::path::{Path, PathBuf};
@@ -26,7 +26,7 @@ use nice_plug::params::persist::PersistentField;
 use nice_plug::prelude::{Enum, Param};
 use serde_json::Value;
 
-/// How far a descriptor may move from what its report recorded. Chosen in `AGENTS.md`, *The space
+/// How far a descriptor may move from what its report recorded. Chosen in `NOTES.md`, *The space
 /// audit*, against the measured effect of small changes to a space and its controls.
 #[derive(Clone, Copy, Debug)]
 pub struct Tolerances {
@@ -58,7 +58,7 @@ pub struct Tolerances {
 /// Each sits above the most rendering through the plugin moves a descriptor as generated across the
 /// hundred factory spaces, and under what the small change named beside it moves on the space the
 /// moved-space test renders; each change is a small fraction of the just-noticeable differences the
-/// Space card ranks errors by (`AGENTS.md`, *The space audit*).
+/// Space card ranks errors by (`NOTES.md`, *The space audit*).
 pub const TOLERANCES: Tolerances = Tolerances {
     // Floors are the worst of the owner's hundred as generated; each movement is tight-live-room's,
     // the space `a_moved_space_is_caught_and_the_descriptor_named` renders.
@@ -70,7 +70,7 @@ pub const TOLERANCES: Tolerances = Tolerances {
     drr_db: 0.02,
     // Floor 0; Pre-delay +0.1 ms moves it 0.091 ms. Under three samples at 48 kHz.
     pre_delay_s: 0.00005,
-    // Floor 0 — a first passage, which jumps (crates/mxm-classic-verb-fit/AGENTS.md); Size ×1.01
+    // Floor 0 — a first passage, which jumps (crates/mxm-classic-verb-fit/NOTES.md); Size ×1.01
     // moves it 6 ms. The profile below carries the same information steadily.
     mixing_time_s: 0.003,
     // Floor 0.0001; Width ×0.99 moves it 0.0015. Lowered from 0.004 on the hundred, where that move

@@ -1,6 +1,6 @@
 # mxm-classic-verb — UI design brief
 
-Required by `MXM_DESIGN_SYSTEM.md` §14. **Status: approved by the owner, 2026-09-14.** Plan §9's P5
+Required by mxm-kit's [`MXM_DESIGN_SYSTEM.md`](https://github.com/mxm-audio/mxm-kit/blob/main/docs/MXM_DESIGN_SYSTEM.md) §14. **Status: approved by the owner, 2026-09-14.** Plan §9's P5
 builds the editor from it.
 
 **Plugin:** `mxm-classic-verb`; CLAP id `dk.mxm.mxm-classic-verb`. An original everyday
@@ -135,7 +135,7 @@ Not a §14 question, but it is decided with the panel. **Mix fills `fx.reverb`**
 roles: Space (stepped), Decay (log), Size (log), Pre-delay (log), Bass decay, Treble decay and
 Decay shape (stepped). Its eighth slot is left free. Diffusion, the modulation pair, Width, the tone
 pair, Early and late, and Ducking are shape controls: they stay unmapped, automatable and on the
-panel. Role ids are written into `docs/MXM_CONTROL_MAP.md` in the same pass.
+panel. Role ids are written into `docs/MXM_CONTROL_MAP.md` (mxm-kit's since the split) in the same pass.
 
 ## Deliberate deviations from the design system
 

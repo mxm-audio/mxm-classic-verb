@@ -9,7 +9,7 @@
 //!
 //! **Where the tolerances come from.** Each is the worst over the ten cases of
 //! `the_round_trip_population` (rooms, chambers, halls and plates at 44.1, 48 and 96 kHz, mono and
-//! stereo; the crate's `AGENTS.md`) with headroom, not over the three cases asserted here.
+//! stereo; the crate's `NOTES.md`) with headroom, not over the three cases asserted here.
 
 mod known;
 
@@ -262,7 +262,7 @@ fn round_trip(name: &str) -> Fit {
 }
 
 /// Prints every case's recovered values and descriptor errors: the population the tolerances above,
-/// and the crate's `AGENTS.md` table, are measured on.
+/// and the crate's `NOTES.md` table, are measured on.
 #[test]
 #[ignore]
 fn the_round_trip_population() {

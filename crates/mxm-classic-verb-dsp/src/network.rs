@@ -7,7 +7,7 @@ use crate::filter::{Allpass, BandGains, BilinearCoefficients, DecayFilter};
 use core::f32::consts::TAU;
 
 /// Delay lines in the network. Plan D6, taken by measurement at P3.5: eight rang or clicked on the
-/// owner's responses, sixteen with allpasses in the loop did neither (`AGENTS.md`).
+/// owner's responses, sixteen with allpasses in the loop did neither (`NOTES.md`).
 pub const LINES: usize = 16;
 /// Allpasses inside each line's loop.
 pub const LOOP_ALLPASSES: usize = 2;

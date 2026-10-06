@@ -1,7 +1,8 @@
 //! The engine's contracts (plan §3), each measured.
 //!
 //! Thresholds are argued beside their assertions from measured values with headroom, as
-//! `crates/mxm-measure/AGENTS.md` asks: the crate supplies rulers, this file supplies verdicts.
+//! `crates/mxm-measure/AGENTS.md` (in mxm-kit) asks: the crate supplies rulers, this file supplies
+//! verdicts.
 
 use mxm_classic_verb_dsp::space::{HIGH_CUT_OPEN_HZ, MIN_HIGH_CUT_HZ};
 use mxm_classic_verb_dsp::{
@@ -307,7 +308,7 @@ fn every_corner_of_the_domain_stays_finite_and_under_the_loop_ceiling() {
             println!("corner {k} at {fs} Hz: peak {peak:.2}");
             // The claim is finiteness and a gain bound, not unity: a near-lossless loop fed
             // full-scale noise resonates above full scale. This ceiling catches a bound that has
-            // actually broken, which grows without limit; the measured peaks are in the crate's AGENTS.md.
+            // actually broken, which grows without limit; the measured peaks are in the crate's NOTES.md.
             assert!(peak < 1_000.0, "corner {k} at {fs} Hz peaked at {peak}");
         }
     }

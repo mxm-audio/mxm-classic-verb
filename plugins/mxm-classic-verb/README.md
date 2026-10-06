@@ -13,6 +13,6 @@ your own impulse response: drop a WAV or AIFF file on the Space card, and the fi
 the `Loaded` position and travels with your presets and projects. The factory spaces are generated
 by the same fitter, and are provisional: today they are fitted from synthetic renders of four
 hand-authored stand-ins, until spaces chosen from real impulse responses replace them. See
-`plans/plan-mxm-classic-verb.md`.
+`plans/plan-mxm-classic-verb.md` (in the private archive).
 
-MIT licensed; see `LICENSE`.
+GPL-3.0-or-later; see the repository's [`LICENSE`](../../LICENSE) at its root.

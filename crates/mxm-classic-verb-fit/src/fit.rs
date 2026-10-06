@@ -19,7 +19,7 @@ use crate::search::{self, Problem, Settings, model, pre_delay_control, profile_d
 use crate::solve;
 
 // ---------------------------------------------------------------------------------------------------
-// The fit's constants. Each reason is beside it and in the crate's AGENTS.md.
+// The fit's constants. Each reason is beside it and in the crate's NOTES.md.
 // ---------------------------------------------------------------------------------------------------
 
 /// A band read by T20 because its T30 was not measurable counts this much against one read by T30.
@@ -79,7 +79,7 @@ pub const REFINE_MIN_DIFFUSION_STEP: f64 = 0.02;
 /// **The fitted Size is the density floor**: the network's total delay is this share of the response's
 /// longest measured band decay — the recipe's modal density floor, Σm ≥ 0.15·T₆₀·f_s
 /// (`research:effects/feedback-delay-network-reverb.md` §3.4, §13 step 1) — and Size is not searched.
-/// **Measured** at P3.5 on twenty of the owner's responses (this crate's `AGENTS.md`, *Size is the
+/// **Measured** at P3.5 on twenty of the owner's responses (this crate's `NOTES.md`, *Size is the
 /// density floor*): searched from 2 ms, Size fell to lines of 2–14 ms that rang, which the echo density
 /// profile cannot see; searched upward from the floor, it ran to its 300 ms top for most responses and
 /// clicked. At the floor 17 of the twenty were within every tail-texture limit, against 15 at 1.25 and

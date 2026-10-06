@@ -191,8 +191,8 @@ cargo run -p mxm-classic-verb-fit --release --example classic_verb_synthetic_res
 cargo run -p mxm-classic-verb-fit --release --example classic_verb_generate -- --manifest <that folder>/manifest.tsv
 ```
 
-Never `--workspace` from this crate while the collection's other members are being written beside it.
-Linux and macOS are not verified by anything here ([last runs](NOTES.md#last-run)).
+Never `--workspace` from this crate while the workspace's other members (the collection's, before the split) are being written beside it.
+Linux and macOS are not verified by anything here ([last runs](NOTES.md#last-run)); *since the split (2026-10-06)* the tests run on Linux in WSL before a push and on macOS by CI on `v*` tags.
 
 # Child DOX Index
 

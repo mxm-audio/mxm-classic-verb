@@ -538,8 +538,9 @@ mod tests {
         }
     }
 
-    /// One trip through the host, as `vendor/nice-plug`'s CLAP wrapper makes it: the CLAP value is
-    /// the normalized value times the step count, the text carries the unit, and the parsed text
+    /// One trip through the host, as nice-plug's CLAP wrapper makes it (`vendor/nice-plug` before
+    /// the split; the mxm-audio/nice-plug fork since 2026-10-06): the CLAP value is the
+    /// normalized value times the step count, the text carries the unit, and the parsed text
     /// comes back through the parameter's normalized conversion before it is formatted again.
     /// Returns the failure, if the text changed or did not parse.
     ///

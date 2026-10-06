@@ -2,7 +2,7 @@
 //! analyser recovers what was put there, within tolerances measured first and asserted with headroom.
 //!
 //! **Where the tolerances come from.** Each is the worst error over many realisations of the same
-//! plan (12 to 32, recorded in the crate's `AGENTS.md`), not over the seeds asserted here, so an
+//! plan (12 to 32, recorded in the crate's `NOTES.md`), not over the seeds asserted here, so an
 //! assertion is not a lucky seed. Band-limited noise with few degrees of freedom is what limits the
 //! low bands: an octave at 125 Hz is 88 Hz wide, and one realisation of its decay fluctuates by
 //! several percent. That is the estimator's spread on one response, which is what a real measurement
@@ -158,7 +158,7 @@ fn a_planted_room_is_recovered() {
 
         // The mixing time: the tail starts at 45 ms, and a 20 ms window lies wholly inside it from
         // 55 ms. Measured on these seeds: +1, −2 and +1 ms. Over 32 realisations the median error was
-        // 4 ms and the 90th percentile 12 ms, with one 83 ms outlier (AGENTS.md).
+        // 4 ms and the 90th percentile 12 ms, with one 83 ms outlier (NOTES.md).
         let mixing = f64::from(a.echo_density.mixing_time_s.expect("a room mixes"));
         let planted_mixing = plan.tail_start_s + 0.010;
         assert!(

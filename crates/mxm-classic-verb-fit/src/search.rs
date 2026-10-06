@@ -3,7 +3,8 @@
 //! candidate is scored by how far its early part lies from the response's: its echo density profile
 //! over the span where density grows — the whole profile, not the mixing time alone, whose "first
 //! reaches one" reading has a long tail — and its early energy envelope, which carries when the
-//! network starts after the pre-delay and how smoothly its energy builds (this crate's `AGENTS.md`).
+//! network starts after the pre-delay and how smoothly its energy builds (this crate's `NOTES.md`,
+//! *How each part is fitted*).
 
 use core::ops::RangeInclusive;
 
