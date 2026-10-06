@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "_comment": [
+    "Which of mxm-classic-verb's parameters fill the collection's control roles.",
+    "Roles come from docs/MXM_CONTROL_MAP.md, which is normative; parameters are named by",
+    "their permanent string id, never by display name.",
+    "",
+    "Mix fills the existing fx.reverb role: it is how much reverb is in what you hear.",
+    "The seven dedicated roles occupy page 13, Classic verb, in the brief's order - Space, Decay,",
+    "Size, Pre-delay, Bass decay, Treble decay, Decay shape - and leave its eighth slot free",
+    "deliberately.",
+    "Diffusion, Mod depth, Mod rate, Width, Low tone, High tone, Early and late and Ducking are",
+    "shape controls, set once for a space rather than played while the effect runs. They stay",
+    "unmapped, automatable and on the panel."
+  ],
+  "instruments": [
+    {
+      "clap_id": "dk.mxm.mxm-classic-verb",
+      "name": "mxm-classic-verb",
+      "params": {
+        "fx.reverb": "mix",
+        "fx.verb_space": "space",
+        "fx.verb_decay": "decay",
+        "fx.verb_size": "size",
+        "fx.verb_predelay": "predelay",
+        "fx.verb_bass": "bass",
+        "fx.verb_treble": "treble",
+        "fx.verb_shape": "shape"
+      }
+    }
+  ]
+}

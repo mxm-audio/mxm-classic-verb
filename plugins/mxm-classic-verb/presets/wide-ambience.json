@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "plugin": "dk.mxm.mxm-classic-verb",
+  "name": "Wide ambience",
+  "category": "pad",
+  "_comment": "`v` is the value and is authoritative. `text` is this plugin's own formatting of it, kept so the file can be read, and is never loaded.",
+  "params": {
+    "bass": {
+      "v": 0.5,
+      "text": "×1.00"
+    },
+    "decay": {
+      "v": 0.44801512,
+      "text": "1.20 s"
+    },
+    "diffusion": {
+      "v": 0.75,
+      "text": "75 %"
+    },
+    "duck": {
+      "v": 0.0,
+      "text": "0 %"
+    },
+    "earlylate": {
+      "v": 0.5,
+      "text": "0.0 dB"
+    },
+    "hightone": {
+      "v": 0.5,
+      "text": "0.0 dB"
+    },
+    "lowtone": {
+      "v": 0.5,
+      "text": "0.0 dB"
+    },
+    "mix": {
+      "v": 0.35,
+      "text": "35 %"
+    },
+    "moddepth": {
+      "v": 0.0,
+      "text": "0.0 ms"
+    },
+    "modrate": {
+      "v": 0.4554047,
+      "text": "0.50 Hz"
+    },
+    "modsync": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "predelay": {
+      "v": 0.37947062,
+      "text": "20 ms"
+    },
+    "predelaysync": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "shape": {
+      "v": 0.0,
+      "text": "Natural"
+    },
+    "size": {
+      "v": 0.3445588,
+      "text": "20 ms"
+    },
+    "space": {
+      "v": 0.17,
+      "text": "Clean air"
+    },
+    "treble": {
+      "v": 0.5,
+      "text": "×1.00"
+    },
+    "width": {
+      "v": 0.8,
+      "text": "220 %"
+    }
+  },
+  "state": null
+}

@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "plugin": "dk.mxm.mxm-classic-verb",
+  "name": "Reverse swell",
+  "category": "fx",
+  "_comment": "`v` is the value and is authoritative. `text` is this plugin's own formatting of it, kept so the file can be read, and is never loaded.",
+  "params": {
+    "bass": {
+      "v": 0.5,
+      "text": "×1.00"
+    },
+    "decay": {
+      "v": 0.4091326,
+      "text": "0.80 s"
+    },
+    "diffusion": {
+      "v": 0.75,
+      "text": "75 %"
+    },
+    "duck": {
+      "v": 0.0,
+      "text": "0 %"
+    },
+    "earlylate": {
+      "v": 0.5,
+      "text": "0.0 dB"
+    },
+    "hightone": {
+      "v": 0.5,
+      "text": "0.0 dB"
+    },
+    "lowtone": {
+      "v": 0.5,
+      "text": "0.0 dB"
+    },
+    "mix": {
+      "v": 0.45,
+      "text": "45 %"
+    },
+    "moddepth": {
+      "v": 0.0,
+      "text": "0.0 ms"
+    },
+    "modrate": {
+      "v": 0.4554047,
+      "text": "0.50 Hz"
+    },
+    "modsync": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "predelay": {
+      "v": 0.0,
+      "text": "0.0 ms"
+    },
+    "predelaysync": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "shape": {
+      "v": 1.0,
+      "text": "Reverse"
+    },
+    "size": {
+      "v": 0.5372419,
+      "text": "60 ms"
+    },
+    "space": {
+      "v": 0.34,
+      "text": "Medium hall"
+    },
+    "treble": {
+      "v": 0.5,
+      "text": "×1.00"
+    },
+    "width": {
+      "v": 0.5,
+      "text": "100 %"
+    }
+  },
+  "state": null
+}

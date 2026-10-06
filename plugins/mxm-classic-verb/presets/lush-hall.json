@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "plugin": "dk.mxm.mxm-classic-verb",
+  "name": "Lush hall",
+  "category": "pad",
+  "_comment": "`v` is the value and is authoritative. `text` is this plugin's own formatting of it, kept so the file can be read, and is never loaded.",
+  "params": {
+    "bass": {
+      "v": 0.5,
+      "text": "×1.00"
+    },
+    "decay": {
+      "v": 0.56199634,
+      "text": "3.50 s"
+    },
+    "diffusion": {
+      "v": 0.75,
+      "text": "75 %"
+    },
+    "duck": {
+      "v": 0.0,
+      "text": "0 %"
+    },
+    "earlylate": {
+      "v": 0.5,
+      "text": "0.0 dB"
+    },
+    "hightone": {
+      "v": 0.5,
+      "text": "0.0 dB"
+    },
+    "lowtone": {
+      "v": 0.5,
+      "text": "0.0 dB"
+    },
+    "mix": {
+      "v": 0.32,
+      "text": "32 %"
+    },
+    "moddepth": {
+      "v": 0.61237246,
+      "text": "1.5 ms"
+    },
+    "modrate": {
+      "v": 0.49999997,
+      "text": "0.70 Hz"
+    },
+    "modsync": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "predelay": {
+      "v": 0.37947062,
+      "text": "20 ms"
+    },
+    "predelaysync": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "shape": {
+      "v": 0.0,
+      "text": "Natural"
+    },
+    "size": {
+      "v": 0.60119367,
+      "text": "80 ms"
+    },
+    "space": {
+      "v": 0.32,
+      "text": "Warm concert hall"
+    },
+    "treble": {
+      "v": 0.5,
+      "text": "×1.00"
+    },
+    "width": {
+      "v": 0.5,
+      "text": "100 %"
+    }
+  },
+  "state": null
+}

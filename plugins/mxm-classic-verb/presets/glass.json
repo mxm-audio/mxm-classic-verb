@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "plugin": "dk.mxm.mxm-classic-verb",
+  "name": "Glass",
+  "category": "pad",
+  "_comment": "`v` is the value and is authoritative. `text` is this plugin's own formatting of it, kept so the file can be read, and is never loaded.",
+  "params": {
+    "bass": {
+      "v": 0.39551818,
+      "text": "×0.50"
+    },
+    "decay": {
+      "v": 0.5240216,
+      "text": "2.50 s"
+    },
+    "diffusion": {
+      "v": 0.75,
+      "text": "75 %"
+    },
+    "duck": {
+      "v": 0.0,
+      "text": "0 %"
+    },
+    "earlylate": {
+      "v": 0.5,
+      "text": "0.0 dB"
+    },
+    "hightone": {
+      "v": 0.5625,
+      "text": "+3.0 dB"
+    },
+    "lowtone": {
+      "v": 0.5,
+      "text": "0.0 dB"
+    },
+    "mix": {
+      "v": 0.3,
+      "text": "30 %"
+    },
+    "moddepth": {
+      "v": 0.0,
+      "text": "0.0 ms"
+    },
+    "modrate": {
+      "v": 0.4554047,
+      "text": "0.50 Hz"
+    },
+    "modsync": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "predelay": {
+      "v": 0.37947062,
+      "text": "20 ms"
+    },
+    "predelaysync": {
+      "v": 0.0,
+      "text": "Off"
+    },
+    "shape": {
+      "v": 0.0,
+      "text": "Natural"
+    },
+    "size": {
+      "v": 0.5372419,
+      "text": "60 ms"
+    },
+    "space": {
+      "v": 0.31,
+      "text": "Glittering hall"
+    },
+    "treble": {
+      "v": 0.70122904,
+      "text": "×3.00"
+    },
+    "width": {
+      "v": 0.5,
+      "text": "100 %"
+    }
+  },
+  "state": null
+}

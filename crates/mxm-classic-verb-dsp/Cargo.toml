@@ -1,0 +1,15 @@
+[package]
+name = "mxm-classic-verb-dsp"
+description = "Framework-free DSP for mxm-classic-verb: a feedback delay network reverberator whose spaces can be fitted from impulse responses"
+version.workspace = true
+edition.workspace = true
+rust-version = "1.87"
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+
+[dependencies]
+
+[dev-dependencies]
+mxm-measure.workspace = true
+mxm-audio-file.workspace = true

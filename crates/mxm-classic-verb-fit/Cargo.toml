@@ -1,0 +1,17 @@
+[package]
+name = "mxm-classic-verb-fit"
+description = "Analyses an impulse response and fits an mxm-classic-verb space to it; takes samples, does no file I/O"
+version.workspace = true
+edition.workspace = true
+rust-version = "1.87"
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+
+[dependencies]
+mxm-classic-verb-dsp.workspace = true
+
+[dev-dependencies]
+mxm-measure.workspace = true
+# The offline examples read WAV files; the fit itself does no file I/O.
+hound = "=3.5.1"
