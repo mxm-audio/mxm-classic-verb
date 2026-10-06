@@ -65,7 +65,7 @@ the card and a `Loaded` position on the selector. It shows the fit report's summ
 confidence, and the largest descriptor error — with the full report on hover. A refusal replaces
 that line with its reason and emits no parameter change.
 
-**Recorded at P6, where this section was silent** (`plugins/mxm-classic-verb/AGENTS.md`, *Loading a
+**Recorded at P6, where this section was silent** (`plugins/mxm-classic-verb/NOTES.md`, *Loading a
 space from an impulse response*, holds the detail and the tests):
 
 - **The target is the whole Space card**, and its visible face is the one line, placed under the
