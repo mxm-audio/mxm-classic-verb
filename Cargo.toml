@@ -32,8 +32,8 @@ mxm-audio-file = { git = "https://github.com/mxm-audio/mxm-kit", tag = "v0.3.1" 
 mxm-classic-verb-dsp = { path = "crates/mxm-classic-verb-dsp" }
 mxm-classic-verb-fit = { path = "crates/mxm-classic-verb-fit" }
 mxm-measure = { git = "https://github.com/mxm-audio/mxm-kit", tag = "v0.3.1" }
-mxm-player = { git = "https://github.com/mxm-audio/mxm-player", tag = "v0.1.0" }
-mxm-player-harness = { git = "https://github.com/mxm-audio/mxm-player", tag = "v0.1.0" }
+mxm-player = { git = "https://github.com/mxm-audio/mxm-player", tag = "v0.1.1" }
+mxm-player-harness = { git = "https://github.com/mxm-audio/mxm-player", tag = "v0.1.1" }
 mxm-plugin-test = { git = "https://github.com/mxm-audio/mxm-kit", tag = "v0.3.1" }
 mxm-preset = { git = "https://github.com/mxm-audio/mxm-kit", tag = "v0.3.1" }
 mxm-tempo = { git = "https://github.com/mxm-audio/mxm-kit", tag = "v0.3.1" }
