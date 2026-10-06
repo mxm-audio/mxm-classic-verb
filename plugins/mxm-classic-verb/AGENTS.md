@@ -192,7 +192,7 @@ cargo test -p mxm-classic-verb-host-tests --test effect_chain   # skips without 
 Manual gates remain: owner listening; **a native drop of the owner's WAV and AIFF responses** onto the
 Space card in the Player and in Bitwig, with a preset and a project saved and reopened; the editor's
 native §15 review in both themes, with 100 %, 150 % and 200 % zoom at a fixed physical window;
-Player audition; and Bitwig. Linux and macOS are not verified on the Windows development machine. *Since the split (2026-10-06):* the tests run on Linux in WSL before a push, on macOS by CI on `v*` tags.
+Player audition; and Bitwig. Linux and macOS are not verified on the Windows development machine. *Since the split (2026-10-06):* Linux and macOS are checked later, together, and by CI on `v*` tags.
 
 # Child DOX Index
 
