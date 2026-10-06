@@ -80,7 +80,7 @@ fn shortest() -> usize {
 /// cargo test -p mxm-classic-verb --release --test space_audit -- --ignored --nocapture
 /// ```
 #[test]
-#[ignore = "a measurement, printed for AGENTS.md"]
+#[ignore = "a measurement, printed for NOTES.md"]
 fn measure_what_small_changes_move() {
     let unbounded = Tolerances {
         decay_percent: f32::INFINITY,

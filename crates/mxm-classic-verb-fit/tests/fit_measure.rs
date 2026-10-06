@@ -119,7 +119,7 @@ fn bands(result: &Fit) -> String {
 /// after the direct sound, T60 2.2, 2.0, 1.8, 1.6, 1.4, 1.25 and 1.1 s from 125 Hz to 8 kHz; then the
 /// same with ten reflections of gain 0.3, evenly from 15 to 45 ms.
 #[test]
-#[ignore = "a measurement, printed for AGENTS.md"]
+#[ignore = "a measurement, printed for NOTES.md"]
 fn measure_the_dense_onsets() {
     let mut plain = Plan::room(48_000.0, Layout::Decorrelated);
     plain.duration_s = 3.5;
@@ -146,7 +146,7 @@ fn measure_the_dense_onsets() {
 /// `Plan::room`, stereo at 48 kHz, noise −95 dB, band levels against 1 kHz from 125 Hz to 8 kHz as
 /// named.
 #[test]
-#[ignore = "a measurement, printed for AGENTS.md"]
+#[ignore = "a measurement, printed for NOTES.md"]
 fn measure_the_steep_tilts() {
     let plants: [(&str, [f64; 7]); 3] = [
         ("dark", [3.0, 2.0, 1.0, 0.0, -6.0, -18.0, -30.0]),
@@ -182,7 +182,7 @@ type Tilt = (&'static str, fn(f64) -> f64);
 /// `Plan::room` with a white late field and the plants named, 24 realisations of each: stereo seeds 1–8
 /// and mono seeds 1–4, at 44.1 and 48 kHz.
 #[test]
-#[ignore = "a measurement, printed for AGENTS.md"]
+#[ignore = "a measurement, printed for NOTES.md"]
 fn measure_the_high_cut_on_planted_rooms() {
     let plants: [Tilt; 3] = [
         ("-12 dB/oct above 3 kHz", |hz| {
@@ -265,7 +265,7 @@ fn measure_the_high_cut_on_planted_rooms() {
 /// `Plan::room`, seed 1, stereo, at 44.1 and 48 kHz: a white late field below 2 kHz, and at 2, 4 and
 /// 8 kHz the band levels against 1 kHz that the owner's pack read at P3 (aggregates only).
 #[test]
-#[ignore = "a measurement, printed for AGENTS.md"]
+#[ignore = "a measurement, printed for NOTES.md"]
 fn measure_the_packs_tone_curves() {
     let curves: [(&str, [f64; 3]); 3] = [
         ("clamped median", [2.0, 1.1, -4.5]),
@@ -286,7 +286,7 @@ fn measure_the_packs_tone_curves() {
 /// One fit of a planted room at each length, rate and layout named, three runs each. Run alone
 /// (`--test-threads=1`).
 #[test]
-#[ignore = "a measurement, printed for AGENTS.md"]
+#[ignore = "a measurement, printed for NOTES.md"]
 fn measure_the_cost() {
     let cases: [(&str, f64, Layout, f64); 6] = [
         (

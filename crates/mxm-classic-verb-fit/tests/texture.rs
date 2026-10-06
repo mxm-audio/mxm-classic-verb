@@ -282,7 +282,7 @@ impl Range {
 /// cargo test -p mxm-classic-verb-fit --release --test texture -- --ignored --nocapture
 /// ```
 #[test]
-#[ignore = "a measurement, printed for AGENTS.md"]
+#[ignore = "a measurement, printed for NOTES.md"]
 fn measure_the_texture_populations() {
     const OTHER_T60_S: [f64; 3] = [0.8, 1.2, 2.0];
     let plants: [(&str, TextureTail, &[f64]); 4] = [
