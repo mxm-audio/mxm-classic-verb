@@ -340,6 +340,10 @@ impl GuiContextInner for GestureWatch {
     fn set_state(&self, state: PluginState) {
         self.context.set_state(state);
     }
+
+    fn request_restart(&self) {
+        self.context.request_restart();
+    }
 }
 
 /// Draws the preset surface through the watching setter, and supersedes the running fit if it
