@@ -192,7 +192,7 @@ cargo run -p mxm-classic-verb-fit --release --example classic_verb_generate -- -
 ```
 
 Never `--workspace` from this crate while the workspace's other members (the collection's, before the split) are being written beside it.
-Linux and macOS are not verified by anything here ([last runs](NOTES.md#last-run)); *since the split (2026-10-06)* Linux and macOS are checked later, together, and by CI on `v*` tags.
+Linux and macOS are not verified by anything here ([last runs](NOTES.md#last-run)); *since the split (2026-10-06)* Linux and macOS are checked later, together, and by CI when started by hand.
 
 # Child DOX Index
 
