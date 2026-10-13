@@ -14,6 +14,7 @@ use std::sync::{Arc, RwLock};
 
 use crate::loaded::LoadedField;
 use crate::spaces::FACTORY;
+use mxm_params::text::{StringToValue, ValueToString};
 
 /// The selector: the factory positions plus exactly one `Loaded` position, last (plan §2.2).
 /// **Generated** from the factory-space manifest with the table its positions sound
@@ -68,9 +69,6 @@ impl ShapeChoice {
         }
     }
 }
-
-type ValueToString = Arc<dyn Fn(f32) -> String + Send + Sync>;
-type StringToValue = Arc<dyn Fn(&str) -> Option<f32> + Send + Sync>;
 
 fn number(text: &str, suffixes: &[&str]) -> Option<f32> {
     let mut t = text.trim().to_ascii_lowercase();
@@ -538,90 +536,18 @@ mod tests {
         }
     }
 
-    /// One trip through the host, as nice-plug's CLAP wrapper makes it (`vendor/nice-plug` before
-    /// the split; the mxm-audio/nice-plug fork since 2026-10-06): the CLAP value is the
-    /// normalized value times the step count, the text carries the unit, and the parsed text
-    /// comes back through the parameter's normalized conversion before it is formatted again.
-    /// Returns the failure, if the text changed or did not parse.
-    ///
-    /// # Safety
-    ///
-    /// `ptr` must point at a parameter that outlives the call.
-    unsafe fn host_round_trip(id: &str, ptr: ParamPtr, clap_value: f64) -> Option<String> {
-        unsafe {
-            let steps = ptr.step_count().unwrap_or(1);
-            let normalised = clap_value as f32 / steps as f32;
-            let first = ptr.normalized_value_to_string(normalised, true);
-            let Some(parsed) = ptr.string_to_normalized_value(&first) else {
-                return Some(format!("{id}: {first:?} does not parse"));
-            };
-            let back = parsed as f64 * steps as f64;
-            let second = ptr.normalized_value_to_string(back as f32 / steps as f32, true);
-            (second != first).then(|| {
-                format!(
-                    "{id} at plain {}: {first:?} came back {second:?}",
-                    ptr.preview_plain(normalised)
-                )
-            })
-        }
-    }
-
-    /// **Every parameter's text survives the host's normalized conversion unchanged.** A host
-    /// formats a value, parses the text, normalizes the result and formats that again, and
-    /// `clap-validator`'s `param-conversions` checks that the text came back identical — on a grid
-    /// of its own, so a clean validator run proves nothing about a sliver between its points.
-    ///
-    /// **Branch points and zero, not only a grid.** The 98-point grid this replaced passed Width, the
-    /// one percentage whose range crosses zero, printing `-0 %` a hair below zero and `0 %` on the
-    /// way back.
-    ///
-    /// **Decay is probed where it switches, and is a guard there rather than a reproduction.**
-    /// `seconds` picks hundredths or tenths from the rounded *tenth*, so the one `f32` just under
-    /// 9.95 whose tenth rounds up would print `9.9 s` and come back `9.90 s`. This range's
-    /// normalized conversion cannot produce that value — 9.95 itself comes back a ULP lower, and a
-    /// sweep of every normalized neighbour around it found no failure — so nothing here fails today;
-    /// a change to the range or its skew that made it reachable would.
-    ///
-    /// Probes, for every parameter in `param_map` — the selector and Decay shape included: the
-    /// twenty-step grid; `clap-validator` 0.4.1's own grid, whose size follows the parameter count;
-    /// both sides of every branch point in [`branch_points`]; and a hair either side of zero on a
-    /// range that crosses it.
+    /// **Every parameter's text survives the host's round trip**, with the unit on, across the
+    /// collection's grids and switch points (`mxm_plugin_test::text_checks`), plus both sides of
+    /// every branch point in [`branch_points`].
     #[test]
-    fn every_parameter_text_is_idempotent_through_the_hosts_conversion() {
+    fn every_parameter_text_survives_the_hosts_round_trip() {
         let params = MxmClassicVerbParams::default();
-        let map = params.param_map();
-        let validator_points = 4000usize.div_ceil(map.len()).clamp(5, 100);
-        let mut failures = Vec::new();
-        for (id, ptr, _) in map {
-            // SAFETY: `params` owns every parameter these pointers refer to and outlives the loop;
-            // this is the access `param-conversions` makes through CLAP.
-            unsafe {
-                let steps = ptr.step_count().unwrap_or(1) as f64;
-                let mut probes: Vec<f64> = (0..=19).map(|i| steps * i as f64 / 19.0).collect();
-                probes.extend(
-                    (0..validator_points)
-                        .map(|i| steps * (i as f64 / (validator_points - 1) as f64)),
-                );
-                let mut plains: Vec<f32> = branch_points(&id)
-                    .into_iter()
-                    .flat_map(|(point, step)| around(point, step))
-                    .collect();
-                let (low, high) = (ptr.preview_plain(0.0), ptr.preview_plain(1.0));
-                if low.min(high) < 0.0 && low.max(high) > 0.0 {
-                    plains.extend([-1.0e-3, -1.0e-4, 0.0, 1.0e-4, 1.0e-3]);
-                }
-                probes.extend(
-                    plains
-                        .into_iter()
-                        .map(|plain| ptr.preview_normalized(plain) as f64 * steps),
-                );
-                failures.extend(
-                    probes
-                        .into_iter()
-                        .filter_map(|value| host_round_trip(&id, ptr, value)),
-                );
-            }
-        }
-        assert!(failures.is_empty(), "{}", failures.join("\n"));
+        let boundaries: Vec<f32> = params
+            .param_map()
+            .iter()
+            .flat_map(|(id, _, _)| branch_points(id))
+            .flat_map(|(point, step)| around(point, step))
+            .collect();
+        mxm_plugin_test::text_checks::every_text_round_trips(&params, &boundaries);
     }
 }

@@ -17,7 +17,7 @@ use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicUsize, Ordering};
 
 use mxm_classic_verb_dsp::Space;
-use mxm_preset::ErasedParam;
+use mxm_params::ErasedParam;
 use nice_plug::context::gui::{GuiContext, GuiContextInner};
 use nice_plug::params::internals::ParamPtr;
 use nice_plug::prelude::{Param, ParamSetter, PluginApi, PluginState};

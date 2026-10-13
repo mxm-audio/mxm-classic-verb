@@ -30,7 +30,7 @@ impl mxm_preset::Instrument for MxmClassicVerbParams {
         crate::CLAP_ID
     }
 
-    fn parameters(&self) -> Vec<(&'static str, &dyn mxm_preset::ErasedParam)> {
+    fn parameters(&self) -> Vec<(&'static str, &dyn mxm_params::ErasedParam)> {
         // Declaration order is the preset and Init write order: the selector before the controls,
         // so a recalled preset's controls land on the space they were designed against.
         vec![
@@ -126,6 +126,19 @@ mod tests {
 
     /// **A project saved before the tempo syncs restores them Off** (`mxm_preset::add_switches_off`),
     /// whatever this instance had.
+    /// **Every stored `text` is this plugin's own formatting of the `v` beside it**
+    /// (`mxm_preset::stale_factory_texts`).
+    #[test]
+    fn every_factory_text_is_this_plugins_formatting_of_its_value() {
+        let stale = mxm_preset::stale_factory_texts(&MxmClassicVerbParams::default());
+        assert!(
+            stale.is_empty(),
+            "{} stale texts — regenerate the files:\n{}",
+            stale.len(),
+            stale.join("\n")
+        );
+    }
+
     #[test]
     fn an_older_state_restores_the_tempo_syncs_off() {
         use nice_plug::prelude::Plugin as _;

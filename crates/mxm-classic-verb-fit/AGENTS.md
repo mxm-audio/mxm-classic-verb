@@ -151,6 +151,13 @@ fitted value. Why, and the pool: [NOTES.md](NOTES.md#size-is-the-density-floor).
   not reproduce the fit's verification analysis bit for bit, or an output that would carry a path, file
   name or folder name. Format, outputs and runs: [NOTES.md](NOTES.md#the-factory-space-generator).
 
+- **A justified copy of a reader, and what would retire it.** `mxm-audio-file-decode` is the
+  collection's reader; this one stays beside it because it refuses a file from its **header**,
+  before anything proportional to the file is allocated, and reads float AIFF-C, which the shared
+  decoder does not yet do. The plugin's `decode.rs` is a port of it with the same contract. When
+  the shared decoder gains a header-only preflight and float AIFF-C, both move to it (the
+  architecture audit's O5).
+
 # Work Guidance
 
 - **Every constant is declared with its reason beside it** (`src/lib.rs`, `src/decay.rs`,
