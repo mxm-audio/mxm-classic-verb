@@ -127,6 +127,9 @@ impl NiceEguiApp for MxmClassicVerbApp {
         mxm_ui::typography::apply(&context);
         // Light by default, overridable with `MXM_EDITOR_THEME`; see `mxm_ui::theme::preference`.
         context.set_theme(mxm_ui::theme::preference());
+
+        // The keys of the keymap in use, in the folder newDAWn and every MXM editor share.
+        mxm_ui::navigation::use_shared_keymap(&context);
         self.host = Some(GestureWatch::new(gui_context));
         Ok(())
     }
