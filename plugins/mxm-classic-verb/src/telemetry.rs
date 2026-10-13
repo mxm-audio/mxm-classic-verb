@@ -1,12 +1,13 @@
 //! Lock-free, lossy audio-to-editor telemetry. An effect has no developer MIDI channel.
 
 use std::sync::Arc;
-use std::sync::atomic::{AtomicBool, AtomicU32, Ordering};
+use std::sync::atomic::{AtomicU32, Ordering};
 
 pub struct Telemetry {
-    peak: AtomicU32,
+    /// The output level and its clip latch: the collection's one meter policy
+    /// (`mxm_telemetry::PeakMeter`).
+    pub meter: mxm_telemetry::PeakMeter,
     wet: AtomicU32,
-    clipped: AtomicBool,
     /// The host tempo in force, so a synced pre-delay or mod rate reads its division.
     pub tempo: mxm_tempo::TempoCell,
 }
@@ -20,9 +21,8 @@ impl Default for Telemetry {
 impl Telemetry {
     pub fn new() -> Self {
         Self {
-            peak: AtomicU32::new(0),
+            meter: mxm_telemetry::PeakMeter::new(),
             wet: AtomicU32::new(0),
-            clipped: AtomicBool::new(false),
             tempo: mxm_tempo::TempoCell::new(),
         }
     }
@@ -46,26 +46,11 @@ impl Telemetry {
     /// Once per block: the output's peak, and the largest distance between output and input — the
     /// wet the reverb actually added.
     pub fn publish(&self, peak: f32, wet: f32) {
-        Self::publish_max(&self.peak, peak);
+        self.meter.publish(peak);
         Self::publish_max(&self.wet, wet);
-        if peak >= 1.0 {
-            self.clipped.store(true, Ordering::Relaxed);
-        }
-    }
-
-    pub fn take_peak(&self) -> f32 {
-        f32::from_bits(self.peak.swap(0, Ordering::Relaxed))
     }
 
     pub fn take_wet(&self) -> f32 {
         f32::from_bits(self.wet.swap(0, Ordering::Relaxed))
-    }
-
-    pub fn clipped(&self) -> bool {
-        self.clipped.load(Ordering::Relaxed)
-    }
-
-    pub fn clear_clip(&self) {
-        self.clipped.store(false, Ordering::Relaxed);
     }
 }

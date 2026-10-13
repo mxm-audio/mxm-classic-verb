@@ -184,9 +184,9 @@ pub fn panel(
     ui.ctx()
         .request_repaint_after(std::time::Duration::from_millis(50));
     // Destructive reads, once per frame and before anything is drawn.
-    let peak = telemetry.take_peak();
+    let peak = telemetry.meter.take();
     let wet = telemetry.take_wet();
-    let clipped = telemetry.clipped();
+    let clipped = telemetry.meter.clipped();
 
     // One question, and both layers suspend on it: the paging renderer's `hold` and the cursor's
     // `inert` both ask whether another surface owns this frame's keyboard.
@@ -206,7 +206,7 @@ pub fn panel(
         },
         |ui| {
             if mxm_ui::shell::level_meter(ui, &tokens, peak, clipped) {
-                telemetry.clear_clip();
+                telemetry.meter.clear_clip();
             }
             mxm_ui::shell::zoom_control(ui);
             mxm_ui::shell::editor_theme_control(ui);
