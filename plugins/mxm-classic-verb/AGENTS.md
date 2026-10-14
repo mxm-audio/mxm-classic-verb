@@ -114,7 +114,8 @@ Plan §5.2, built at P6: a WAV or AIFF dropped on the Space card is checked, dec
 background task, and lands through the sampler's commit order. Only the fitted space is stored; no
 path enters state or presets ([NOTES.md § Loading](NOTES.md#loading-a-space-from-an-impulse-response)).
 
-- **Refuse early, by name, writing nothing:** the header preflight (the fit crate's own bounds) runs
+- **Refuse early, by name, writing nothing** — this reader is the plugin's own, not the collection's
+  decoder, for these guarantees ([NOTES.md § Why the reader is its own](NOTES.md#why-the-reader-is-its-own)): the header preflight (the fit crate's own bounds) runs
   before anything proportional to the file is allocated; every decoded sample is checked finite; a
   fit under `CONFIDENCE_FLOOR` names its weakest check. The current space keeps sounding. The fit
   runs on nice-plug's background thread, never in `process()` or on the editor's thread.

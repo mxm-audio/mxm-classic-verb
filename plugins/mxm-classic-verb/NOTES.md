@@ -429,6 +429,17 @@ was `FitValue::HighCut`, which maps to `Clamped::HighCut` (*the high cut*). The 
 taken (`envelope_db`, `verification_refusal`, and the tail texture's `texture_a` and
 `texture_b` errors), and what taking each would be, are listed at the top of that file.
 
+## Why the reader is its own
+
+`decode.rs` is not the collection's decoder (`mxm-audio-file-decode`), and the owner decided so (the
+architecture audit's O5, 2026-10-14: "keep both readers"). Three things it does, the decoder cannot without a policy of its
+own: it judges the header **before anything proportional to the file is allocated**, where symphonia's
+readers allocate from container metadata while opening (an M4A's sample table); it **accepts a
+truncated AIFF**, decoding the frames that are there, where the decoder refuses a lossless file
+shorter than it says; and it reads AIFF-C `twos` and `sowt` at **every width from 1 to 32 bits**, where
+symphonia reads them at 16 alone (and is not patched here). Keeping the reader keeps all three. The
+plan and its review are `ops/plans/plan-audio-readers.md` in the workspace.
+
 ## Control map
 
 Mix fills the existing `fx.reverb` role. Page 13, Effects / Classic verb, maps the seven performed
