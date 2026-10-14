@@ -32,6 +32,7 @@ mxm-audio-file = { git = "https://github.com/mxm-audio/mxm-kit", branch = "main"
 mxm-classic-verb-dsp = { path = "crates/mxm-classic-verb-dsp" }
 mxm-classic-verb-fit = { path = "crates/mxm-classic-verb-fit" }
 mxm-dsp = { git = "https://github.com/mxm-audio/mxm-kit", branch = "main" }
+mxm-editor = { git = "https://github.com/mxm-audio/mxm-kit", branch = "main" }
 mxm-measure = { git = "https://github.com/mxm-audio/mxm-kit", branch = "main" }
 mxm-player = { git = "https://github.com/mxm-audio/mxm-player", branch = "main" }
 mxm-player-harness = { git = "https://github.com/mxm-audio/mxm-player", branch = "main" }

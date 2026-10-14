@@ -38,7 +38,6 @@ use mxm_ui::space::SPACE_5;
 use mxm_ui::theme::Tokens;
 use nice_plug::context::gui::GuiContext;
 use nice_plug::prelude::*;
-use nice_plug_egui::{EguiEditorState, NiceEguiApp, create_egui_editor};
 
 use crate::loading::{self, GestureWatch, LoadTask};
 use crate::params::MxmClassicVerbParams;
@@ -54,7 +53,7 @@ const REFERENCE: (u32, u32) = (1076, 408);
 /// `the_minimum_window_shows_each_card_without_scrolling` hold it.
 const MINIMUM: (u32, u32) = (316, 476);
 
-pub type MxmClassicVerbEditor = nice_plug_egui::EguiEditor<MxmClassicVerbApp>;
+pub type MxmClassicVerbEditor = mxm_editor::Editor<MxmClassicVerbApp>;
 pub use mxm_preset::PresetUi;
 
 /// How the editor schedules a fit: the host's background executor in a plugin, a recorder in a test.
@@ -65,24 +64,11 @@ pub fn create(
     telemetry: Arc<Telemetry>,
     executor: AsyncExecutor<crate::MxmClassicVerb>,
 ) -> Option<MxmClassicVerbEditor> {
-    let state = EguiEditorState::from_size(
-        nice_plug::editor::dpi::LogicalSize::new(REFERENCE.0, REFERENCE.1),
-        1.0,
-    );
     let spawn: Spawn = Arc::new(move |task| executor.execute_background(task));
-    create_egui_editor(
-        state,
-        nice_plug_egui::RepaintNotifier::new(),
-        nice_plug_egui::EguiNiceSettings {
-            title: crate::NAME.to_owned(),
-            resize_hint: ResizeHint {
-                size_constraints: nice_plug::editor::SizeConstraints::min_logical_size(
-                    nice_plug::editor::dpi::LogicalSize::new(MINIMUM.0 as f32, MINIMUM.1 as f32),
-                ),
-                ..ResizeHint::RESIZABLE
-            },
-            ..Default::default()
-        },
+    mxm_editor::create(
+        crate::NAME,
+        REFERENCE,
+        MINIMUM,
         MxmClassicVerbApp::new(params, telemetry, spawn),
     )
 }
@@ -116,19 +102,20 @@ impl MxmClassicVerbApp {
     }
 }
 
-impl NiceEguiApp for MxmClassicVerbApp {
-    fn build(
-        &mut self,
-        context: egui::Context,
-        gui_context: GuiContext,
-        _frame: &mut nice_plug_egui::Frame,
-    ) -> Result<(), nice_plug_egui::baseview::HandlerError> {
-        mxm_ui::shell::install(&context);
-        self.host = Some(GestureWatch::new(gui_context));
-        Ok(())
+impl MxmClassicVerbApp {
+    /// What closing the window does: a load in flight is superseded, and the host is dropped.
+    fn window_closed(&mut self) {
+        self.params.loaded.supersede();
+        self.host = None;
+    }
+}
+
+impl mxm_editor::Panel for MxmClassicVerbApp {
+    fn opened(&mut self, _context: &egui::Context, gui_context: &GuiContext) {
+        self.host = Some(GestureWatch::new(gui_context.clone()));
     }
 
-    fn ui(&mut self, ui: &mut Ui, _frame: &mut nice_plug_egui::Frame) {
+    fn ui(&mut self, ui: &mut Ui, _host: &GuiContext) {
         let Some(host) = self.host.as_ref() else {
             return;
         };
@@ -150,12 +137,8 @@ impl NiceEguiApp for MxmClassicVerbApp {
         );
     }
 
-    /// **Closing the editor supersedes a running fit** (plan §5.2). Its gestures belong to an open
-    /// editor, and committing a result whose editor has closed would replace the space a `Loaded`
-    /// selection plays with no gesture a host could undo — which the plan rejects.
-    fn editor_closed(&mut self) {
-        self.params.loaded.supersede();
-        self.host = None;
+    fn closed(&mut self, _host: &GuiContext) {
+        self.window_closed();
     }
 }
 
@@ -1156,7 +1139,7 @@ mod tests {
         let mut app =
             MxmClassicVerbApp::new(Arc::clone(&params), Arc::new(Telemetry::default()), spawn);
         let generation = params.loaded.begin("room.wav");
-        NiceEguiApp::editor_closed(&mut app);
+        app.window_closed();
         assert!(!params.loaded.is_current(generation));
         crate::loading::run_with(
             &params.loaded,

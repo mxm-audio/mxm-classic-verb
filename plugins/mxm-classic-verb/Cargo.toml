@@ -13,8 +13,8 @@ crate-type = ["cdylib", "lib"]
 
 [dependencies]
 mxm-dsp.workspace = true
+mxm-editor.workspace = true
 nice-plug.workspace = true
-nice-plug-egui.workspace = true
 mxm-ui.workspace = true
 mxm-preset.workspace = true
 mxm-params.workspace = true

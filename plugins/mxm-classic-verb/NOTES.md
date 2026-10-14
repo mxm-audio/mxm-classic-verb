@@ -320,7 +320,7 @@ so there is no panic to test.
 
 | Race or rule | Test |
 |---|---|
-| The editor closing during a fit | `closing_the_editor_supersedes_a_running_fit` (through `NiceEguiApp::editor_closed`) |
+| The editor closing during a fit | `closing_the_editor_supersedes_a_running_fit` (through the panel's close hook, `window_closed`) |
 | A second drop | `a_second_drop_supersedes_the_first` |
 | A recall during a fit | `a_recall_during_a_fit_supersedes_it` |
 | Init during a fit | `init_during_a_fit_supersedes_it` |
