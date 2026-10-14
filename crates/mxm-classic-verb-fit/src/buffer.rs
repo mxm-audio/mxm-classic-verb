@@ -129,13 +129,8 @@ mod tests {
         let frames = (1.2 * fs) as usize;
         let direct = (0.05 * fs) as usize;
         let tail = direct + (0.004 * fs) as usize;
-        let mut state = 12u64.wrapping_mul(0x9E37_79B9_7F4A_7C15);
-        let mut noise = move || {
-            state ^= state << 13;
-            state ^= state >> 7;
-            state ^= state << 17;
-            (state >> 11) as f64 / (1u64 << 52) as f64 - 1.0
-        };
+        let mut rng = mxm_rng::Xorshift64::from_state(12u64.wrapping_mul(0x9E37_79B9_7F4A_7C15));
+        let mut noise = move || rng.bipolar_f64();
         let mut out: Vec<f32> = (0..frames)
             .map(|n| {
                 let floor = 3.0e-5 * noise();

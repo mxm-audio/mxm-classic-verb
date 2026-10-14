@@ -500,15 +500,9 @@ fn fft(re: &mut [f64], im: &mut [f64]) {
 mod tests {
     use super::*;
 
-    fn noise(n: usize, mut state: u64) -> Vec<f64> {
-        (0..n)
-            .map(|_| {
-                state ^= state << 13;
-                state ^= state >> 7;
-                state ^= state << 17;
-                (state >> 11) as f64 / (1u64 << 52) as f64 - 1.0
-            })
-            .collect()
+    fn noise(n: usize, state: u64) -> Vec<f64> {
+        let mut rng = mxm_rng::Xorshift64::from_state(state);
+        (0..n).map(|_| rng.bipolar_f64()).collect()
     }
 
     #[test]
@@ -568,13 +562,10 @@ mod tests {
         assert!(value < 0.5, "{value} at {lag}");
 
         // A burst every 20 ms reads its period.
-        let mut state = 3u64;
+        let mut rng = mxm_rng::Xorshift64::from_state(3);
         let pulses: Vec<f64> = (0..16_384)
             .map(|n| {
-                state ^= state << 13;
-                state ^= state >> 7;
-                state ^= state << 17;
-                let white = (state >> 11) as f64 / (1u64 << 52) as f64 - 1.0;
+                let white = rng.bipolar_f64();
                 if n % 960 < 96 { white } else { 0.01 * white }
             })
             .collect();

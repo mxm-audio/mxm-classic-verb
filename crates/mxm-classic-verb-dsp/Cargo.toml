@@ -9,6 +9,8 @@ authors.workspace = true
 repository.workspace = true
 
 [dependencies]
+# The shaped path's tap placement; dependency-free at this floor.
+mxm-rng.workspace = true
 
 [dev-dependencies]
 mxm-measure.workspace = true

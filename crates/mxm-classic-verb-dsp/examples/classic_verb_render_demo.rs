@@ -12,13 +12,8 @@ const RATE: f32 = 48_000.0;
 fn phrase() -> Vec<f32> {
     let n = (RATE * 6.0) as usize;
     let mut x = vec![0.0f32; n];
-    let mut s = 0x2545_f491_4f6c_dd1du64;
-    let mut rnd = || {
-        s ^= s << 13;
-        s ^= s >> 7;
-        s ^= s << 17;
-        ((s >> 40) as f32 / (1u64 << 24) as f32) * 2.0 - 1.0
-    };
+    let mut rng = mxm_rng::Xorshift64::from_state(0x2545_f491_4f6c_dd1d);
+    let mut rnd = || rng.bipolar_f32();
     for hit in 0..4 {
         let start = (RATE * (0.1 + 0.35 * hit as f32)) as usize;
         for i in 0..(RATE * 0.08) as usize {

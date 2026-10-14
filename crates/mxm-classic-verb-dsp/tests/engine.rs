@@ -134,15 +134,8 @@ fn band_t60(engine: &mut Engine, hz: f64, seconds: f64) -> f64 {
 
 /// Deterministic noise.
 fn noise(n: usize, seed: u64) -> Vec<f32> {
-    let mut s = seed | 1;
-    (0..n)
-        .map(|_| {
-            s ^= s << 13;
-            s ^= s >> 7;
-            s ^= s << 17;
-            ((s >> 40) as f32 / (1u64 << 24) as f32) * 2.0 - 1.0
-        })
-        .collect()
+    let mut rng = mxm_rng::Xorshift64::from_state(seed | 1);
+    (0..n).map(|_| rng.bipolar_f32()).collect()
 }
 
 // ── Silence, Off, reset ────────────────────────────────────────────────────────────────────────

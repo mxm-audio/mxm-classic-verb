@@ -9,6 +9,7 @@
 use crate::DecayShape;
 use crate::delay::DelayLine;
 use crate::filter::Allpass;
+use mxm_rng::Lcg32;
 
 /// Taps per channel. **Chosen**: with the two diffusers after them, dense enough to read as a
 /// reverberant block across the whole length range, sparse enough to keep "a bit of grain".
@@ -35,27 +36,18 @@ pub(crate) struct ShapedPath {
     diff_r: [Allpass; 2],
 }
 
-/// A small deterministic generator, so every instance has the same taps.
-struct Lcg(u32);
-
-impl Lcg {
-    fn unit(&mut self) -> f32 {
-        self.0 = self.0.wrapping_mul(1_664_525).wrapping_add(1_013_904_223);
-        (self.0 >> 8) as f32 / (1u32 << 24) as f32
-    }
-}
-
 impl ShapedPath {
     pub(crate) fn new(sample_rate: f32) -> Self {
-        let mut rng = Lcg(0x6d78_6d31);
+        // A deterministic generator, so every instance has the same taps.
+        let mut rng = Lcg32::new(0x6d78_6d31);
         let mut position = [0.0; SHAPE_TAPS];
         let mut sign_l = [0.0; SHAPE_TAPS];
         let mut sign_r = [0.0; SHAPE_TAPS];
         for k in 0..SHAPE_TAPS {
-            let jitter = 0.8 * (rng.unit() - 0.5);
+            let jitter = 0.8 * (rng.unit_f32() - 0.5);
             position[k] = ((k as f32 + 0.5 + jitter) / SHAPE_TAPS as f32).clamp(0.0, 1.0);
-            sign_l[k] = if rng.unit() < 0.5 { -1.0 } else { 1.0 };
-            sign_r[k] = if rng.unit() < 0.5 { -1.0 } else { 1.0 };
+            sign_l[k] = if rng.unit_f32() < 0.5 { -1.0 } else { 1.0 };
+            sign_r[k] = if rng.unit_f32() < 0.5 { -1.0 } else { 1.0 };
         }
         let mut path = Self {
             position,

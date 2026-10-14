@@ -6,6 +6,7 @@
 //! noise floor — and every file is written by these functions, into memory or a temporary file that
 //! is removed afterwards.
 
+use mxm_rng::Xorshift64;
 use std::path::{Path, PathBuf};
 use std::sync::Mutex;
 use std::sync::atomic::{AtomicUsize, Ordering};
@@ -19,28 +20,12 @@ use nice_plug::prelude::{PluginApi, PluginState};
 use crate::loading::{Fitted, FittedControls};
 use crate::payload::{Descriptor, DescriptorError, Report};
 
-/// Marsaglia's xorshift64, seeded, so a planted response is bit-repeatable.
-pub struct XorShift(u64);
-
-impl XorShift {
-    pub fn new(seed: u64) -> Self {
-        let state = seed.wrapping_add(1).wrapping_mul(0x9E37_79B9_7F4A_7C15);
-        Self(if state == 0 { 1 } else { state })
-    }
-
-    pub fn next_u64(&mut self) -> u64 {
-        let mut x = self.0;
-        x ^= x << 13;
-        x ^= x >> 7;
-        x ^= x << 17;
-        self.0 = x;
-        x
-    }
-
-    /// Uniform in −1..1.
-    pub fn bipolar(&mut self) -> f64 {
-        (self.next_u64() >> 11) as f64 / (1u64 << 52) as f64 - 1.0
-    }
+/// Marsaglia's xorshift64 (`mxm-rng`), seeded so a planted response is bit-repeatable. Multiplying by an odd
+/// constant is a bijection, so distinct seeds give distinct states; the one seed that maps to zero,
+/// which xorshift cannot leave, is moved off it.
+pub fn xorshift(seed: u64) -> Xorshift64 {
+    let state = seed.wrapping_add(1).wrapping_mul(0x9E37_79B9_7F4A_7C15);
+    Xorshift64::from_state(if state == 0 { 1 } else { state })
 }
 
 /// A planted response: 50 ms of noise floor 90 dB under the direct sound, a unit direct impulse,
@@ -51,15 +36,15 @@ pub fn response(rate: u32, seconds: f32, t60_s: f32, channels: usize, seed: u64)
     let frames = (f64::from(seconds) * fs).round() as usize;
     let direct = ((0.05 * fs) as usize).min(frames.saturating_sub(1));
     let tail = direct + (0.004 * fs) as usize;
-    let mut rng = XorShift::new(seed);
+    let mut rng = xorshift(seed);
     (0..channels)
         .map(|channel| {
             let mut out: Vec<f32> = (0..frames)
                 .map(|n| {
-                    let floor = 3.0e-5 * rng.bipolar();
+                    let floor = 3.0e-5 * rng.bipolar_f64();
                     let late = if n >= tail {
                         let t = (n - tail) as f64 / fs;
-                        0.1 * 10f64.powf(-3.0 * t / f64::from(t60_s)) * rng.bipolar()
+                        0.1 * 10f64.powf(-3.0 * t / f64::from(t60_s)) * rng.bipolar_f64()
                     } else {
                         0.0
                     };

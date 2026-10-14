@@ -6,33 +6,16 @@
 #![allow(dead_code)]
 
 use mxm_measure::spectrum::ifft;
+use mxm_rng::Xorshift64;
 
 pub const BANDS_HZ: [f64; 7] = [125.0, 250.0, 500.0, 1000.0, 2000.0, 4000.0, 8000.0];
 
-/// Marsaglia's xorshift64 with the (13, 7, 17) triple. Seeded, so every response is bit-repeatable.
-pub struct XorShift(u64);
-
-impl XorShift {
-    pub fn new(seed: u64) -> Self {
-        // Multiplying by an odd constant is a bijection, so distinct seeds give distinct states; the
-        // one seed that maps to zero, which xorshift cannot leave, is moved off it.
-        let state = seed.wrapping_add(1).wrapping_mul(0x9E37_79B9_7F4A_7C15);
-        Self(if state == 0 { 1 } else { state })
-    }
-
-    pub fn next_u64(&mut self) -> u64 {
-        let mut x = self.0;
-        x ^= x << 13;
-        x ^= x >> 7;
-        x ^= x << 17;
-        self.0 = x;
-        x
-    }
-
-    /// Uniform in −1..1.
-    pub fn bipolar(&mut self) -> f64 {
-        (self.next_u64() >> 11) as f64 / (1u64 << 52) as f64 - 1.0
-    }
+/// Marsaglia's xorshift64 (`mxm-rng`), seeded so every response is bit-repeatable. Multiplying by an odd
+/// constant is a bijection, so distinct seeds give distinct states; the one seed that maps to zero,
+/// which xorshift cannot leave, is moved off it.
+pub fn xorshift(seed: u64) -> Xorshift64 {
+    let state = seed.wrapping_add(1).wrapping_mul(0x9E37_79B9_7F4A_7C15);
+    Xorshift64::from_state(if state == 0 { 1 } else { state })
 }
 
 /// Noise with a spectrum confined to `low_hz..high_hz` and shaped by `weight(hz)` on amplitude,
@@ -43,7 +26,7 @@ fn shaped_noise(
     low_hz: f64,
     high_hz: f64,
     weight: impl Fn(f64) -> f64,
-    rng: &mut XorShift,
+    rng: &mut Xorshift64,
 ) -> Vec<f64> {
     let n = frames.next_power_of_two().max(4);
     let mut re = vec![0.0f64; n];
@@ -53,7 +36,7 @@ fn shaped_noise(
     let last = ((high_hz / bin_hz).ceil() as usize).min(n / 2);
     for k in first..last {
         let w = weight(k as f64 * bin_hz);
-        let (a, b) = (rng.bipolar() * w, rng.bipolar() * w);
+        let (a, b) = (rng.bipolar_f64() * w, rng.bipolar_f64() * w);
         re[k] = a;
         im[k] = b;
         re[n - k] = a;
@@ -173,7 +156,7 @@ impl Plan {
         let nyquist = rate * 0.5;
 
         let mut rest: Vec<Vec<f64>> = vec![vec![0.0; frames]; count];
-        let mut rng = XorShift::new(self.seed);
+        let mut rng = xorshift(self.seed);
         for (channel, signal) in rest.iter_mut().enumerate() {
             if channel == 1 && self.layout == Layout::Identical {
                 break;
@@ -293,7 +276,7 @@ pub fn assert_finite(analysis: &mxm_classic_verb_fit::Analysis) {
 }
 
 /// A standard normal variate, by Box and Muller's transform of two uniform variates.
-pub fn gaussian(rng: &mut XorShift) -> f64 {
+pub fn gaussian(rng: &mut Xorshift64) -> f64 {
     // (0, 1], so the logarithm is finite.
     let u1 = ((rng.next_u64() >> 11) as f64 + 1.0) / (1u64 << 53) as f64;
     let u2 = (rng.next_u64() >> 11) as f64 / (1u64 << 53) as f64;
@@ -356,7 +339,7 @@ impl TexturePlan {
         let tail_frames = frames - direct - 1;
         let level = 10f64.powf(self.tail_db / 20.0);
         let floor = 10f64.powf(self.noise_db / 20.0);
-        let mut rng = XorShift::new(self.seed);
+        let mut rng = xorshift(self.seed);
         (0..self.channels)
             .map(|_| {
                 let mut tail = vec![0.0f64; tail_frames];
@@ -373,9 +356,9 @@ impl TexturePlan {
                         while hz < top {
                             modes.push((
                                 hz,
-                                2.0 * std::f64::consts::PI * 0.5 * (rng.bipolar() + 1.0),
+                                2.0 * std::f64::consts::PI * 0.5 * (rng.bipolar_f64() + 1.0),
                             ));
-                            hz += spacing_hz * (1.0 + 0.5 * rng.bipolar());
+                            hz += spacing_hz * (1.0 + 0.5 * rng.bipolar_f64());
                         }
                         // Each mode's mean square is a²/2, so the sum's is the tail's level.
                         let a = level * (2.0 / modes.len() as f64).sqrt();
@@ -402,7 +385,7 @@ impl TexturePlan {
                             if n >= tail_frames {
                                 break;
                             }
-                            tail[n] += if rng.bipolar() < 0.0 {
+                            tail[n] += if rng.bipolar_f64() < 0.0 {
                                 -amplitude
                             } else {
                                 amplitude

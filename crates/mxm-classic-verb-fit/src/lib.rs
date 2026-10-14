@@ -803,13 +803,8 @@ mod tests {
     /// analyser refuses for its margin, but whose onset stays identifiable.
     fn low_margin_response() -> Vec<f32> {
         let rate = 44_100usize;
-        let mut state = 0x9E37_79B9_7F4A_7C15u64;
-        let mut noise = move || {
-            state ^= state << 13;
-            state ^= state >> 7;
-            state ^= state << 17;
-            (state >> 11) as f64 / (1u64 << 52) as f64 - 1.0
-        };
+        let mut rng = mxm_rng::Xorshift64::from_state(0x9E37_79B9_7F4A_7C15);
+        let mut noise = move || rng.bipolar_f64();
         (0..2 * rate)
             .map(|i| {
                 let t = i as f64 / rate as f64;

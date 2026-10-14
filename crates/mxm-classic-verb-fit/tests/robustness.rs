@@ -4,13 +4,13 @@
 mod support;
 
 use mxm_classic_verb_fit::{DecayMethod, MIN_DURATION_S, Refusal, analyse, analyse_with_method};
-use support::{Layout, Plan, XorShift, assert_finite};
+use support::{Layout, Plan, assert_finite, xorshift};
 
 #[test]
 fn pathological_inputs_never_produce_nan() {
     let rate = 22_050.0f64;
     let frames = (MIN_DURATION_S * rate).ceil() as usize;
-    let mut rng = XorShift::new(3);
+    let mut rng = xorshift(3);
     let mut cases: Vec<(&str, Vec<Vec<f32>>)> = Vec::new();
 
     let mut impulse = vec![0.0f32; frames];
@@ -21,9 +21,11 @@ fn pathological_inputs_never_produce_nan() {
     step[500..].iter_mut().for_each(|v| *v = 0.5);
     cases.push(("a DC step", vec![step]));
 
-    let mut burst: Vec<f32> = (0..frames).map(|_| (1e-5 * rng.bipolar()) as f32).collect();
+    let mut burst: Vec<f32> = (0..frames)
+        .map(|_| (1e-5 * rng.bipolar_f64()) as f32)
+        .collect();
     for k in 0..50 {
-        burst[500 + k] += (0.5 * rng.bipolar()) as f32;
+        burst[500 + k] += (0.5 * rng.bipolar_f64()) as f32;
     }
     cases.push(("a 50-sample burst", vec![burst]));
 
@@ -45,7 +47,7 @@ fn pathological_inputs_never_produce_nan() {
     let mut silent_end: Vec<f32> = vec![0.0; frames];
     silent_end[200] = 1.0;
     for (n, s) in silent_end.iter_mut().enumerate().skip(201).take(4_000) {
-        *s += (0.05 * 10f64.powf(-3.0 * (n - 201) as f64 / rate / 0.1) * rng.bipolar()) as f32;
+        *s += (0.05 * 10f64.powf(-3.0 * (n - 201) as f64 / rate / 0.1) * rng.bipolar_f64()) as f32;
     }
     cases.push(("a decay into digital silence", vec![silent_end]));
 
@@ -111,15 +113,15 @@ fn the_duration_ceiling_is_affordable() {
     // the input. No threshold is asserted on either: both depend on the machine.
     let rate = 192_000.0f64;
     let frames = (mxm_classic_verb_fit::MAX_DURATION_S * rate) as usize;
-    let mut rng = XorShift::new(9);
+    let mut rng = xorshift(9);
     let channels: Vec<Vec<f32>> = (0..2)
         .map(|_| {
             let mut c = vec![0.0f32; frames];
             c[1_000] = 1.0;
             for (n, v) in c.iter_mut().enumerate().skip(1_001) {
                 let t = (n - 1_001) as f64 / rate;
-                *v += (0.03 * 10f64.powf(-3.0 * t / 3.0) * rng.bipolar() + 1e-5 * rng.bipolar())
-                    as f32;
+                *v += (0.03 * 10f64.powf(-3.0 * t / 3.0) * rng.bipolar_f64()
+                    + 1e-5 * rng.bipolar_f64()) as f32;
             }
             c
         })

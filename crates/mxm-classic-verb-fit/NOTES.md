@@ -80,7 +80,8 @@ existing implementation was opened.
 ## One runtime dependency, MSRV 1.87
 
 `[dependencies]` is `mxm-classic-verb-dsp` alone (`cargo tree -e normal,build`). Dev-dependencies:
-`mxm-measure` (its transform plants test responses and convolves for the audition) and
+`mxm-measure` (its transform plants test responses and convolves for the audition), `mxm-rng` (the
+tests' and examples' seeded responses) and
 `hound = "=3.5.1"` (WAV reading in the examples; no AIFF crate). `rust-version = "1.87"`, compiled
 against (*Verification*): no `let` chains, nothing stabilised after 1.87. The DSP crate is read-only
 from here: an API this crate lacks is reported, not added. **No transform crate either**: the tail

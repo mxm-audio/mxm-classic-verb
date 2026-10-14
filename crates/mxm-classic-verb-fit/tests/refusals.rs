@@ -9,7 +9,8 @@ use mxm_classic_verb_fit::{
     MAX_SAMPLE_RATE_HZ, MIN_CHANNELS, MIN_DURATION_S, MIN_SAMPLE_RATE_HZ, ONSET_BELOW_PEAK_DB,
     Refusal, analyse, preflight,
 };
-use support::{Layout, Plan, XorShift};
+use mxm_rng::Xorshift64;
+use support::{Layout, Plan, xorshift};
 
 fn header(channels: u16, sample_rate: u32, seconds: f64) -> Header {
     Header {
@@ -203,8 +204,8 @@ fn every_refusal_says_what_failed() {
 
 const RATE: f64 = 48_000.0;
 
-fn uniform(rng: &mut XorShift, n: usize, amplitude: f64) -> Vec<f64> {
-    (0..n).map(|_| amplitude * rng.bipolar()).collect()
+fn uniform(rng: &mut Xorshift64, n: usize, amplitude: f64) -> Vec<f64> {
+    (0..n).map(|_| amplitude * rng.bipolar_f64()).collect()
 }
 
 fn to_f32(x: &[f64]) -> Vec<f32> {
@@ -232,34 +233,34 @@ fn shaped_non_responses_are_refused() {
     // Each over a −80 dB floor. Measured over three realisations each: every one refused for want of
     // a decay in a required band.
     let n = 120_000;
-    let mut rng = XorShift::new(1);
+    let mut rng = xorshift(1);
 
     // Ten 80 ms noise bursts at random times and levels.
     let mut bursts = uniform(&mut rng, n, 1e-4);
     for _ in 0..10 {
-        let start = ((rng.bipolar() * 0.5 + 0.5) * (n - 4_000) as f64) as usize;
-        let level = 10f64.powf(-(rng.bipolar() * 0.5 + 0.5) * 15.0 / 20.0);
+        let start = ((rng.bipolar_f64() * 0.5 + 0.5) * (n - 4_000) as f64) as usize;
+        let level = 10f64.powf(-(rng.bipolar_f64() * 0.5 + 0.5) * 15.0 / 20.0);
         for k in 0..3_840 {
-            bursts[start + k] += level * rng.bipolar();
+            bursts[start + k] += level * rng.bipolar_f64();
         }
     }
     // A click, then noise whose amplitude falls linearly to nothing over 1.2 s.
     let mut fade = uniform(&mut rng, n, 1e-4);
     fade[2_400] += 1.0;
     for k in 0..57_600 {
-        fade[2_401 + k] += 0.3 * (1.0 - k as f64 / 57_600.0) * rng.bipolar();
+        fade[2_401 + k] += 0.3 * (1.0 - k as f64 / 57_600.0) * rng.bipolar_f64();
     }
     // A click, then 0.4 s of steady noise that stops dead.
     let mut gated = uniform(&mut rng, n, 1e-4);
     gated[2_400] += 1.0;
     for k in 0..19_200 {
-        gated[2_401 + k] += 0.3 * rng.bipolar();
+        gated[2_401 + k] += 0.3 * rng.bipolar_f64();
     }
     // A reversed decay: noise swelling over 0.5 s to a stop.
     let mut reverse = uniform(&mut rng, n, 1e-4);
     for k in 0..24_000 {
         reverse[2_400 + k] +=
-            0.3 * 10f64.powf(-3.0 * (24_000 - k) as f64 / RATE / 0.5) * rng.bipolar();
+            0.3 * 10f64.powf(-3.0 * (24_000 - k) as f64 / RATE / 0.5) * rng.bipolar_f64();
     }
 
     for (name, signal) in [
@@ -311,9 +312,9 @@ fn an_onset_buried_in_what_precedes_it_is_not_identifiable() {
     // direct sound stands 14.3 dB over what precedes it.
     let planted = Plan::room(RATE, Layout::Mono).build();
     let mut samples = planted.channels[0].clone();
-    let mut rng = XorShift::new(5);
+    let mut rng = xorshift(5);
     for s in &mut samples[..planted.direct_index - 100] {
-        *s += (0.05 * rng.bipolar()) as f32;
+        *s += (0.05 * rng.bipolar_f64()) as f32;
     }
     match analyse(&[&samples], RATE as f32) {
         Err(Refusal::NoIdentifiableOnset { prominence_db }) => {

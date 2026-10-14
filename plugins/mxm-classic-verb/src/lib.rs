@@ -550,8 +550,8 @@ mod tests {
         assert_eq!(plugin.engine.space(), Space::PLATE);
     }
 
-    fn noise_block(plugin: &mut MxmClassicVerb, rng: &mut testing::XorShift) -> f32 {
-        let mut left: Vec<f32> = (0..48).map(|_| (0.3 * rng.bipolar()) as f32).collect();
+    fn noise_block(plugin: &mut MxmClassicVerb, rng: &mut mxm_rng::Xorshift64) -> f32 {
+        let mut left: Vec<f32> = (0..48).map(|_| (0.3 * rng.bipolar_f64()) as f32).collect();
         let mut right = left.clone();
         render(plugin, &mut left, &mut right);
         (left.iter().chain(&right).map(|v| v * v).sum::<f32>() / 96.0).sqrt()
@@ -566,7 +566,7 @@ mod tests {
         set_float(&plugin.params.mix, 1.0);
         commit(&plugin.params, Space::ROOM);
         plugin.prepare(48_000.0, 2);
-        let mut rng = testing::XorShift::new(4);
+        let mut rng = testing::xorshift(4);
         let steady: Vec<f32> = (0..1_000)
             .map(|_| noise_block(&mut plugin, &mut rng))
             .collect();

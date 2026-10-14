@@ -12,6 +12,8 @@ repository.workspace = true
 mxm-classic-verb-dsp.workspace = true
 
 [dev-dependencies]
+# The tests' and examples' seeded responses.
+mxm-rng.workspace = true
 mxm-measure.workspace = true
 # The offline examples read WAV files; the fit itself does no file I/O.
 hound = "=3.5.1"

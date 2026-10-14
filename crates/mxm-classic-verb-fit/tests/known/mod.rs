@@ -63,13 +63,8 @@ pub fn render(known: &Known) -> Vec<Vec<f32>> {
     let lead = (0.05 * known.rate) as usize;
     // At Mix one the engine's dry gain is cos(π/2), not exactly zero; it is taken off the impulse.
     let dry = std::f32::consts::FRAC_PI_2.cos();
-    let mut state = 0x2545_f491_4f6c_dd1du64;
-    let mut noise = move || {
-        state ^= state << 13;
-        state ^= state >> 7;
-        state ^= state << 17;
-        ((state >> 11) as f64 / (1u64 << 52) as f64 - 1.0) as f32 * 1e-5
-    };
+    let mut rng = mxm_rng::Xorshift64::from_state(0x2545_f491_4f6c_dd1d);
+    let mut noise = move || rng.bipolar_f64() as f32 * 1e-5;
     let (mut left, mut right) = (vec![0.0f32; frames], vec![0.0f32; frames]);
     for n in 0..frames {
         let x = if n == lead { 1.0 } else { 0.0 };

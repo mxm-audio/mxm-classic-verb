@@ -28,13 +28,8 @@ const USAGE: &str = "usage: classic_verb_audition --out <folder> [--name <name>]
 fn phrase(rate: f64) -> Vec<f64> {
     let n = (rate * 7.0) as usize;
     let mut x = vec![0.0f64; n];
-    let mut state = 0x2545_f491_4f6c_dd1du64;
-    let mut noise = || {
-        state ^= state << 13;
-        state ^= state >> 7;
-        state ^= state << 17;
-        (state >> 11) as f64 / (1u64 << 52) as f64 - 1.0
-    };
+    let mut rng = mxm_rng::Xorshift64::from_state(0x2545_f491_4f6c_dd1d);
+    let mut noise = || rng.bipolar_f64();
     for hit in 0..4 {
         let start = (rate * (0.1 + 0.4 * hit as f64)) as usize;
         for i in 0..(rate * 0.08) as usize {
