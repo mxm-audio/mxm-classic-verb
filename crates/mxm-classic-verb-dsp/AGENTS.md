@@ -5,7 +5,7 @@ rules are in [NOTES.md](NOTES.md).
 
 # Purpose
 
-Framework-free, zero-dependency DSP for `mxm-classic-verb`: a feedback delay network reverberator
+Framework-free DSP for `mxm-classic-verb`, depending only on `mxm-rng`: a feedback delay network reverberator
 whose **space** — the shape a fit produces — is separate from its **controls**, the performed
 quantities that act on it. The plan is `plans/plan-mxm-classic-verb.md` in the private archive;
 every method's source is `research:effects/feedback-delay-network-reverb.md`.

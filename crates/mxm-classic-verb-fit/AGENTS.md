@@ -34,7 +34,7 @@ Every file and what it holds: [NOTES.md § Files](NOTES.md#files). The ones that
 
 ## Dependencies and MSRV
 
-- `[dependencies]` is `mxm-classic-verb-dsp` alone; dev-only `mxm-measure` and `hound = "=3.5.1"`.
+- `[dependencies]` is `mxm-classic-verb-dsp` alone; dev-only `mxm-measure`, `mxm-rng` and `hound = "=3.5.1"`.
   **No transform crate**: the texture's FFT is this crate's own
   (`the_fft_is_the_discrete_fourier_transform`). Why: [NOTES.md](NOTES.md#one-runtime-dependency-msrv-187).
 - `rust-version = "1.87"`, compiled against: no `let` chains, nothing stabilised after 1.87.
