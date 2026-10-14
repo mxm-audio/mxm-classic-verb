@@ -123,13 +123,7 @@ impl NiceEguiApp for MxmClassicVerbApp {
         gui_context: GuiContext,
         _frame: &mut nice_plug_egui::Frame,
     ) -> Result<(), nice_plug_egui::baseview::HandlerError> {
-        mxm_ui::theme::apply(&context);
-        mxm_ui::typography::apply(&context);
-        // Light by default, overridable with `MXM_EDITOR_THEME`; see `mxm_ui::theme::preference`.
-        context.set_theme(mxm_ui::theme::preference());
-
-        // The keys of the keymap in use, in the folder newDAWn and every MXM editor share.
-        mxm_ui::navigation::use_shared_keymap(&context);
+        mxm_ui::shell::install(&context);
         self.host = Some(GestureWatch::new(gui_context));
         Ok(())
     }
@@ -183,10 +177,9 @@ pub fn panel(
     // finishing in the background has to be seen without it.
     ui.ctx()
         .request_repaint_after(std::time::Duration::from_millis(50));
-    // Destructive reads, once per frame and before anything is drawn.
-    let peak = telemetry.meter.take();
+    // Destructive reads, once per frame and before anything is drawn (the meter's is the app bar's,
+    // `mxm_ui::shell::peak_meter`, drawn first).
     let wet = telemetry.take_wet();
-    let clipped = telemetry.meter.clipped();
 
     // One question, and both layers suspend on it: the paging renderer's `hold` and the cursor's
     // `inert` both ask whether another surface owns this frame's keyboard.
@@ -205,9 +198,7 @@ pub fn panel(
             })
         },
         |ui| {
-            if mxm_ui::shell::level_meter(ui, &tokens, peak, clipped) {
-                telemetry.meter.clear_clip();
-            }
+            mxm_ui::shell::peak_meter(ui, &tokens, &telemetry.meter);
             mxm_ui::shell::zoom_control(ui);
             mxm_ui::shell::editor_theme_control(ui);
         },
