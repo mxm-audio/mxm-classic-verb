@@ -29,11 +29,12 @@ pub use shaped::{SHAPE_MAX_S, SHAPE_MIN_S, SHAPE_TAPS};
 pub use space::{EARLY_MAX_UNITS, EARLY_TAPS, EarlyTap, SPACE_VERSION, Space};
 
 use core::f32::consts::{FRAC_PI_2, LN_10};
-use delay::{DelayLine, Ramp, Smoother, flush, follower_coefficient};
+use delay::{DelayLine, Ramp, Smoother, follower_coefficient};
 use filter::{
     Allpass, BandGains, BilinearCoefficients, HighCut, HighCutCoefficients, Tilt, decay_magnitude,
     lowpass_response, pole, tilt_magnitude,
 };
+use mxm_dsp::guard::{finite_or, flush};
 use network::Network;
 use shaped::ShapedPath;
 
@@ -228,11 +229,7 @@ fn trip_gain(samples: f32, t60: f32, sample_rate: f32) -> f32 {
 }
 
 fn clamped_rate(sample_rate: f32) -> f32 {
-    if sample_rate.is_finite() {
-        sample_rate.clamp(MIN_SAMPLE_RATE, MAX_SAMPLE_RATE)
-    } else {
-        48_000.0
-    }
+    finite_or(sample_rate, 48_000.0).clamp(MIN_SAMPLE_RATE, MAX_SAMPLE_RATE)
 }
 
 /// The tone's reference in radians per sample: [`TONE_REFERENCE_HZ`], held below Nyquist.

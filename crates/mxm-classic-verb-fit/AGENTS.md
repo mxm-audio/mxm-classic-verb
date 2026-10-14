@@ -186,7 +186,7 @@ cargo test -p mxm-classic-verb-fit
 cargo clippy -p mxm-classic-verb-fit --all-targets -- -D warnings
 cargo fmt -p mxm-classic-verb-fit --check
 cargo +1.87.0 test -p mxm-classic-verb-fit          # the declared floor, compiled against
-cargo tree -p mxm-classic-verb-fit -e normal,build  # mxm-classic-verb-dsp, and mxm-rng beneath it
+cargo tree -p mxm-classic-verb-fit -e normal,build  # mxm-classic-verb-dsp, and mxm-rng and mxm-dsp beneath it
 cargo run -p mxm-classic-verb-fit --release --example classic_verb_analyse_synthetic
 cargo test -p mxm-classic-verb-fit --release --test robustness -- --ignored   # the ceiling's cost
 cargo test -p mxm-classic-verb-fit --release --test texture -- --ignored --nocapture   # the texture populations

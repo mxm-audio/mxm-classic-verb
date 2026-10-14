@@ -344,11 +344,7 @@ impl ClapPlugin for MxmClassicVerb {
 nice_export_clap!(MxmClassicVerb);
 
 fn valid_sample_rate(sample_rate: f32) -> f32 {
-    if sample_rate.is_finite() {
-        sample_rate.clamp(MIN_SAMPLE_RATE, MAX_SAMPLE_RATE)
-    } else {
-        48_000.0
-    }
+    mxm_dsp::guard::finite_or(sample_rate, 48_000.0).clamp(MIN_SAMPLE_RATE, MAX_SAMPLE_RATE)
 }
 
 #[cfg(test)]

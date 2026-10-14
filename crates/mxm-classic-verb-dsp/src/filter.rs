@@ -1,8 +1,9 @@
 //! The loop's decay filter, the output tilt and high cut, and the diffusion allpass.
 
-use crate::delay::{DelayLine, flush};
+use crate::delay::DelayLine;
 use crate::space::HIGH_CUT_OPEN_HZ;
 use core::f32::consts::TAU;
+use mxm_dsp::guard::flush;
 
 /// The pole of a one-pole lowpass at `hz`, kept below 0.45 of the sample rate.
 pub(crate) fn pole(hz: f32, sample_rate: f32) -> f32 {

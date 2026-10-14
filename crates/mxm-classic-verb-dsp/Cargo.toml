@@ -10,6 +10,9 @@ repository.workspace = true
 
 [dependencies]
 # The shaped path's tap placement; dependency-free at this floor.
+# The finite and denormal guards (every recursive state is flushed at 1e-20) and the delay line;
+# dependency-free at this floor.
+mxm-dsp.workspace = true
 mxm-rng.workspace = true
 
 [dev-dependencies]

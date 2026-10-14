@@ -1,14 +1,6 @@
 //! Delay storage, level followers and smoothing.
 
-/// Magnitudes below this are written as exact zero, on every recursive state. Chosen: far below any
-/// audible level and above every subnormal, so exact digital silence survives the network.
-pub(crate) const FLUSH_BELOW: f32 = 1.0e-20;
-
-/// Kills subnormal and vanishing values in recursive state.
-#[inline]
-pub(crate) fn flush(x: f32) -> f32 {
-    if x.abs() < FLUSH_BELOW { 0.0 } else { x }
-}
+use mxm_dsp::delay::AgeLine;
 
 /// The per-sample coefficient of a follower with the given time constant. **The one place a
 /// follower's speed becomes a number**, so every follower is a time and the decisions it drives do
@@ -18,65 +10,43 @@ pub(crate) fn follower_coefficient(seconds: f32, sample_rate: f32) -> f32 {
     1.0 - (-1.0 / samples).exp()
 }
 
-/// A circular delay line whose history is invalidated in constant time.
+/// A circular delay line whose history is invalidated in constant time: the collection's
+/// [`AgeLine`] (`mxm_dsp::delay`), sized and clamped as this crate's lines always were.
 ///
 /// Reads are by **age**: age 1 is the sample most recently pushed. A read older than what has been
 /// written since the last invalidation returns exact zero, which is what lets emptying the engine
 /// cost nothing proportional to its memory. A fractional age is split into an integer age and a
 /// fraction **before** any wrapping, so a position near the buffer's end cannot round onto it.
 #[derive(Debug, Clone)]
-pub(crate) struct DelayLine {
-    buf: Vec<f32>,
-    mask: usize,
-    write: usize,
-    valid: usize,
-}
+pub(crate) struct DelayLine(AgeLine);
 
 impl DelayLine {
-    /// A line that can be read at any age up to `max_age` samples, fractional reads included.
+    /// A line that can be read at any age up to `max_age` samples, fractional reads included. Its
+    /// length is the power of two above `max_age + 4`, as before the line was shared.
     pub(crate) fn new(max_age: usize) -> Self {
-        let len = (max_age + 4).next_power_of_two();
-        Self {
-            buf: vec![0.0; len],
-            mask: len - 1,
-            write: 0,
-            valid: 0,
-        }
+        Self(AgeLine::new((max_age + 4).next_power_of_two()))
     }
 
     #[inline]
     pub(crate) fn push(&mut self, x: f32) {
-        self.buf[self.write] = x;
-        self.write = (self.write + 1) & self.mask;
-        if self.valid < self.buf.len() {
-            self.valid += 1;
-        }
+        self.0.push(x);
     }
 
     /// The sample pushed `age` pushes ago; zero outside what has been written.
     #[inline]
     pub(crate) fn read(&self, age: usize) -> f32 {
-        if age == 0 || age > self.valid {
-            return 0.0;
-        }
-        self.buf[(self.write + self.buf.len() - age) & self.mask]
+        self.0.read(age)
     }
 
     /// A fractional age, linearly interpolated. Ages below one read the newest sample.
     #[inline]
     pub(crate) fn read_linear(&self, age: f32) -> f32 {
-        let age = age.max(1.0);
-        let whole = age.floor();
-        let frac = age - whole;
-        let whole = whole as usize;
-        let a = self.read(whole);
-        let b = self.read(whole + 1);
-        a + (b - a) * frac
+        self.0.read_linear(age.max(1.0))
     }
 
     /// Forgets every sample, in constant time.
     pub(crate) fn invalidate(&mut self) {
-        self.valid = 0;
+        self.0.clear();
     }
 }
 

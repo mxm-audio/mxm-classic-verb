@@ -1,5 +1,7 @@
 //! The space: the shape a fit produces, which the controls act on (plan §2).
 
+use mxm_dsp::guard::finite_or;
+
 /// Early reflection taps in every space. Fixed, so any two spaces can be interpolated.
 pub const EARLY_TAPS: usize = 12;
 
@@ -78,10 +80,6 @@ const fn tap(time: f32, gain_l: f32, gain_r: f32) -> EarlyTap {
 }
 
 const SILENT_TAP: EarlyTap = tap(0.0, 0.0, 0.0);
-
-fn finite_or(x: f32, fallback: f32) -> f32 {
-    if x.is_finite() { x } else { fallback }
-}
 
 impl Space {
     /// The space with every value bounded — a space fitted from somebody's own file is

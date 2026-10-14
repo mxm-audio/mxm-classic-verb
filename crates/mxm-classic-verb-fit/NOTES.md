@@ -80,7 +80,7 @@ existing implementation was opened.
 ## One runtime dependency, MSRV 1.87
 
 `[dependencies]` is `mxm-classic-verb-dsp` alone; `cargo tree -e normal,build` shows it and, beneath it,
-the dependency-free `mxm-rng`. Dev-dependencies:
+the dependency-free `mxm-rng` and `mxm-dsp`. Dev-dependencies:
 `mxm-measure` (its transform plants test responses and convolves for the audition), `mxm-rng` (the
 tests' and examples' seeded responses) and
 `hound = "=3.5.1"` (WAV reading in the examples; no AIFF crate). `rust-version = "1.87"`, compiled
@@ -879,8 +879,8 @@ planted, 10 refusals, 2 robustness with the ceiling's timing ignored, 5 texture 
 measurement ignored, 10 fit contract, 3 fit round trip with the population ignored, 6 generate, 1
 memory, and the 5 measurements of `fit_measure`); the debug tests take about 42 s. Clippy with
 `-D warnings` reports nothing; `cargo fmt -p mxm-classic-verb-fit --check` is clean; the same 63 pass on
-1.87.0; `cargo tree -e normal,build` listed `mxm-classic-verb-dsp` alone (since the generators moved to the kit
-it lists the dependency-free `mxm-rng` beneath it); and the plugin's release space
+1.87.0; `cargo tree -e normal,build` listed `mxm-classic-verb-dsp` alone (since the generators and the guards moved
+to the kit it lists the dependency-free `mxm-rng` and `mxm-dsp` beneath it); and the plugin's release space
 audit reads every committed figure as before. The round-trip population, `fit_measure`, the texture
 populations and the synthetic regeneration were last run on 2026-09-15 (four decay bands) and not since:
 reserving fallibly changed no value. Linux and macOS are not verified by anything here.

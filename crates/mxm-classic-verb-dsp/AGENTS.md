@@ -140,7 +140,8 @@ Plan D5, taken by measurement at P3.5 ([NOTES.md § Four decay bands](NOTES.md#f
   ramps linearly over `MIX_RAMP_S`, so Off arrives in bounded time. A parked engine that has heard no
   input since it emptied settles its mix at once, as a fresh engine does; one passing dry audio
   ramps.
-- **Emptying is constant-time:** delay lines forget by resetting a written count.
+- **Emptying is constant-time:** delay lines (`delay::DelayLine`, this crate's sizing over
+  `mxm_dsp::delay::AgeLine`) forget by resetting a written count.
 - **Quiet parks only when** input and wet are below `QUIET_LEVEL`, the input history holds nothing
   being read, and quiet has outlasted `QUIET_HOLD_S` plus a trip round the longest line — or a sparse
   network parks between its own returns. The decision is rate-independent.
@@ -150,7 +151,7 @@ Plan D5, taken by measurement at P3.5 ([NOTES.md § Four decay bands](NOTES.md#f
 
 ## Realtime and numeric rules
 
-- Rust MSRV 1.87, one runtime dependency, `mxm-rng` (dependency-free); `mxm-measure` (the tests' rulers) and `mxm-audio-file` (the
+- Rust MSRV 1.87, two runtime dependencies, `mxm-rng` and `mxm-dsp` (both dependency-free); `mxm-measure` (the tests' rulers) and `mxm-audio-file` (the
   demo's WAV writer) are dev-dependencies only.
 - Allocation only in `Engine::new`. `process` and everything it calls allocate nothing and lock
   nothing. The API is one stereo sample at a time, so output cannot depend on host block partitioning.
@@ -184,7 +185,7 @@ cargo test -p mxm-classic-verb-dsp --release -- --nocapture   # prints the figur
 cargo clippy -p mxm-classic-verb-dsp --all-targets
 cargo fmt -p mxm-classic-verb-dsp --check
 cargo +1.87.0 test -p mxm-classic-verb-dsp
-cargo tree -e normal,build -p mxm-classic-verb-dsp            # mxm-rng alone
+cargo tree -e normal,build -p mxm-classic-verb-dsp            # mxm-rng and mxm-dsp, nothing else
 cargo run -p mxm-classic-verb-dsp --release --example classic_verb_render_demo
 ```
 

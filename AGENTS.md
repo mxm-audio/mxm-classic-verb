@@ -141,8 +141,8 @@ locally (*Verification*).
 
 | Crate | MSRV | Why |
 |---|---|---|
-| `crates/mxm-classic-verb-dsp` | **1.87** | One runtime dependency, the dependency-free `mxm-rng` (its demo dev-depends on `mxm-audio-file`); the sixteen-line feedback delay network with allpasses in its loops, its decay filters, the shaped path and the composition laws. **Verified on 1.87**, library and tests |
-| `crates/mxm-classic-verb-fit` | **1.87** | Impulse-response analysis, fitting and the verification render. **One runtime dependency**, `mxm-classic-verb-dsp`, whose only dependency is the dependency-free `mxm-rng` at this floor; `hound`, `mxm-measure` and `mxm-rng` are dev-only, for the offline examples. **Verified on 1.87**, library and tests |
+| `crates/mxm-classic-verb-dsp` | **1.87** | Two runtime dependencies, the dependency-free `mxm-rng` and `mxm-dsp` (its demo dev-depends on `mxm-audio-file`); the sixteen-line feedback delay network with allpasses in its loops, its decay filters, the shaped path and the composition laws. **Verified on 1.87**, library and tests |
+| `crates/mxm-classic-verb-fit` | **1.87** | Impulse-response analysis, fitting and the verification render. **One runtime dependency**, `mxm-classic-verb-dsp`, whose only dependencies are the dependency-free `mxm-rng` and `mxm-dsp` at this floor; `hound`, `mxm-measure` and `mxm-rng` are dev-only, for the offline examples. **Verified on 1.87**, library and tests |
 | `plugins/mxm-classic-verb` | **1.95** | Its editor pulls in egui; depends on `mxm-classic-verb-dsp`, which stays at 1.87 |
 
 ## Licensing

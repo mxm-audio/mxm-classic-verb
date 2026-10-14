@@ -2,9 +2,10 @@
 //! allpasses inside every line's loop, and each line losing energy through its own decay filter
 //! (Jot and Chaigne, 1991; Stautner and Puckette, 1982; the allpasses after Dattorro, 1997).
 
-use crate::delay::{DelayLine, flush};
+use crate::delay::DelayLine;
 use crate::filter::{Allpass, BandGains, BilinearCoefficients, DecayFilter};
 use core::f32::consts::TAU;
+use mxm_dsp::guard::flush;
 
 /// Delay lines in the network. Plan D6, taken by measurement at P3.5: eight rang or clicked on the
 /// owner's responses, sixteen with allpasses in the loop did neither (`NOTES.md`).

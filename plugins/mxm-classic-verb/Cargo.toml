@@ -12,6 +12,7 @@ repository.workspace = true
 crate-type = ["cdylib", "lib"]
 
 [dependencies]
+mxm-dsp.workspace = true
 nice-plug.workspace = true
 nice-plug-egui.workspace = true
 mxm-ui.workspace = true
