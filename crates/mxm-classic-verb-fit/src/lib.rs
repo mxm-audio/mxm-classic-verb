@@ -60,9 +60,9 @@ mod width;
 
 pub use analysis::{
     Analysis, Band, BandDecay, BandReading, BroadbandDecay, Check, CheckKind, Coherence,
-    DecayFailure, DecayMethod, DensityPoint, EarlyReflections, EarlyWindowEnd, EchoDensity, Onset,
-    Reflection, Segment, Straightness, TailTexture, TextureSegments, Validity, Width,
-    WidthNotMeasured,
+    DecayFailure, DecayMethod, DecayTimes, DensityPoint, EarlyReflections, EarlyWindowEnd,
+    EchoDensity, Onset, Reflection, Segment, Straightness, TailTexture, TextureSegments, Validity,
+    Width, WidthNotMeasured,
 };
 pub use fit::{
     BALANCE_WINDOW_S, BandError, Clamp, ControlRanges, DENSITY_FLOOR_DECAY_SHARE,
@@ -364,6 +364,30 @@ pub fn analyse_with_segments(
         Some(segments),
     )
     .map(|(analysis, _)| analysis)
+}
+
+/// The decay times of a response **with no noise floor**, a synthetic one such as `mxm-room-ir`'s
+/// renders, from its energy (squared samples, from its time zero) at `rate`: Schroeder integration to
+/// the end ([`DecayMethod::Uncompensated`], ISO 3382's method A) and the EDT, T20 and T30 fits
+/// [`analyse`] reads, through the same curve and fit. **It refuses nothing on content**: the input
+/// domain, the confidence and the required bands are [`analyse`]'s rules for a measured response. A
+/// range the curve does not reach is `None`, and so is every time for a rate that is not a positive
+/// number. Its one refusal is [`Refusal::OutOfMemory`].
+pub fn decay_times(energy: &[f64], rate: f64) -> Result<DecayTimes, Refusal> {
+    if !(rate.is_finite() && rate > 0.0) {
+        return Ok(DecayTimes::default());
+    }
+    let curve = decay::integrate(energy, energy.len(), 0.0, 0.0)?;
+    let time = |range| {
+        decay::fit_range(&curve, rate, range)
+            .as_ref()
+            .and_then(decay::decay_time)
+    };
+    Ok(DecayTimes {
+        edt_s: time(decay::EDT_RANGE_DB),
+        t20_s: time(decay::T20_RANGE_DB),
+        t30_s: time(decay::T30_RANGE_DB),
+    })
 }
 
 /// The analysis of a fit's own verification render (plan §4.4): every measurement [`analyse`] makes,
@@ -831,5 +855,56 @@ mod tests {
             .expect("a render is analysed");
         assert_eq!(withheld, Some(strict));
         assert_eq!(analysis.bands.len(), OCTAVE_BANDS_HZ.len());
+    }
+
+    /// `ln(10⁶)`: energy falls 60 dB in T seconds as `e^(−k·t)` with `k = ln(10⁶) / T`.
+    const LN_1E6: f64 = 13.815_510_557_964_274;
+
+    #[test]
+    fn decay_times_recover_an_exact_exponential_and_refuse_nothing_on_content() {
+        let rate = 48_000.0;
+        let t60 = 1.3;
+        let energy: Vec<f64> = (0..(4.0 * rate) as usize)
+            .map(|n| (-LN_1E6 / t60 * n as f64 / rate).exp())
+            .collect();
+        let times = decay_times(&energy, rate).expect("no buffer to refuse");
+        for (name, time) in [
+            ("EDT", times.edt_s),
+            ("T20", times.t20_s),
+            ("T30", times.t30_s),
+        ] {
+            let time = time.unwrap_or_else(|| panic!("{name} absent"));
+            assert!((time / t60 - 1.0).abs() < 1e-4, "{name} {time} vs {t60}");
+        }
+        // Shorter than the analyser's domain, and silent: absent times, never a refusal.
+        let click = decay_times(&[1.0, 0.0, 0.0, 0.0], rate).expect("never refused on content");
+        assert_eq!(click, DecayTimes::default());
+        assert_eq!(
+            decay_times(&[0.0; 64], rate).unwrap(),
+            DecayTimes::default()
+        );
+        assert_eq!(decay_times(&energy, 0.0).unwrap(), DecayTimes::default());
+        assert_eq!(
+            decay_times(&[f64::NAN; 64], rate).unwrap(),
+            DecayTimes::default()
+        );
+    }
+
+    #[test]
+    fn decay_times_are_the_analysers_uncompensated_reading() {
+        let rate = 48_000.0;
+        let energy: Vec<f64> = (0..(3.0 * rate) as usize)
+            .map(|n| (-LN_1E6 / 0.8 * n as f64 / rate).exp() + 1e-6)
+            .collect();
+        let lundeby = decay::lundeby(&energy, rate, LUNDEBY_BROADBAND_BLOCK_S)
+            .result
+            .expect("a decay over a floor");
+        let band = measure_band(&energy, rate, &lundeby, DecayMethod::Uncompensated)
+            .expect("no buffer to refuse");
+        let times = decay_times(&energy, rate).expect("no buffer to refuse");
+        assert!(band.t30_s.is_some());
+        assert_eq!(band.t20_s, times.t20_s.and_then(finite_f32));
+        assert_eq!(band.t30_s, times.t30_s.and_then(finite_f32));
+        assert_eq!(band.edt_s, times.edt_s.and_then(finite_f32));
     }
 }

@@ -256,7 +256,17 @@ pub(crate) fn decay_curve(
             )
         }
     };
+    integrate(energy, end, subtract, correction)
+}
 
+/// The curve itself: `energy` integrated backward from `end`, less `subtract` per sample, plus
+/// `correction` for what lies beyond `end`. To the end with nothing subtracted is method A.
+pub(crate) fn integrate(
+    energy: &[f64],
+    end: usize,
+    subtract: f64,
+    correction: f64,
+) -> Result<DecayCurve, OutOfMemory> {
     // Reserved fallibly: the response's length sizes it.
     let mut curve = buffer::filled(end, 0.0f64)?;
     let mut remaining = correction;

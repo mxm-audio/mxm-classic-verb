@@ -209,6 +209,19 @@ pub enum DecayFailure {
     SlopeNotNegative,
 }
 
+/// The decay times of a response with no noise floor ([`crate::decay_times`]), in seconds: each fitted
+/// over its range of the energy decay curve and extrapolated to 60 dB, and absent where the curve does
+/// not reach the range's bottom.
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
+pub struct DecayTimes {
+    /// From 0 to −10 dB.
+    pub edt_s: Option<f64>,
+    /// From −5 to −25 dB.
+    pub t20_s: Option<f64>,
+    /// From −5 to −35 dB.
+    pub t30_s: Option<f64>,
+}
+
 /// One octave band.
 #[derive(Clone, Debug, PartialEq)]
 pub struct Band {

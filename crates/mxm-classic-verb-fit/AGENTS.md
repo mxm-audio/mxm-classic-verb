@@ -12,10 +12,13 @@ in full: [NOTES.md § What the crate does](NOTES.md#what-the-crate-does)).
 - **The fit (P3)**: `fit` and `fit_with` turn a response into a `Space` and Decay, Size, Diffusion
   and Pre-delay, render it through `mxm-classic-verb-dsp`, analyse the render with the same analyser
   and return the error for every descriptor — or a `FitRefusal`.
+- **The decay reading alone**: `decay_times`, a noiseless response's EDT, T20 and T30 (method A, the
+  analyser's fits). It refuses nothing on content; those rules are `analyse`'s.
 - **The offline tools (plan §5.1)**, as examples: `classic_verb_fit`, `classic_verb_audition`, and the
   factory-space generator `classic_verb_generate` with `classic_verb_synthetic_responses`.
 
-Consumers: `mxm-classic-verb`, and the unshipped `mxm-listening` (`analyse` only). The library does no
+Consumers: `mxm-classic-verb`; the unshipped `mxm-listening` (`analyse` only); `mxm-room-ir` in
+mxm-tools (`decay_times` only, on its synthetic renders: architecture audit O6). The library does no
 file I/O; decoding is the examples'. Method: `research:effects/feedback-delay-network-reverb.md` §9,
 §10 and §13 step 7, from the page's prose and equations; no existing implementation was opened.
 
@@ -23,8 +26,8 @@ file I/O; decoding is the examples'. Method: `research:effects/feedback-delay-ne
 
 Every file and what it holds: [NOTES.md § Files](NOTES.md#files). The ones that carry rules:
 
-- `src/lib.rs` — the public seams (`preflight`, `analyse`, `analyse_with_method`, the fit's
-  re-exports), **every analyser and texture constant with its reason**, the required-band rule, the
+- `src/lib.rs` — the public seams (`preflight`, `analyse`, `analyse_with_method`, `decay_times`,
+  the fit's re-exports), **every analyser and texture constant with its reason**, the required-band rule, the
   order refusals are decided in, and the crate-private non-strict `analyse_render`.
 - `src/fit.rs` — **the fit's public types and constants with their reasons**, `fit`/`fit_with`, the
   density floor that sets Size (`problem`), clamping, the verification render, `DescriptorErrors`.
