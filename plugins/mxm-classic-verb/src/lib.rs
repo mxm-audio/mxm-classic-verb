@@ -341,7 +341,36 @@ impl ClapPlugin for MxmClassicVerb {
     ];
 }
 
+impl Vst3Plugin for MxmClassicVerb {
+    /// Permanent, as `CLAP_ID` is: the CLAP id's hash written out, held to it by
+    /// `identity::the_vst3_class_id_is_the_clap_ids_hash`.
+    const VST3_CLASS_ID: [u8; 16] = [
+        0x4e, 0x2e, 0x9d, 0x4c, 0xd3, 0x62, 0xce, 0xb4, 0xb1, 0x9c, 0x7f, 0x51, 0xd6, 0x2e, 0x82,
+        0xb1,
+    ];
+    const VST3_SUBCATEGORIES: &'static [Vst3SubCategory] =
+        &[Vst3SubCategory::Fx, Vst3SubCategory::Reverb];
+}
+
 nice_export_clap!(MxmClassicVerb);
+nice_export_vst3!(MxmClassicVerb);
+
+/// The plugin's identity in each format.
+#[cfg(test)]
+mod identity {
+    use super::MxmClassicVerb;
+    use mxm_plugin_test::formats;
+
+    #[test]
+    fn the_vst3_class_id_is_the_clap_ids_hash() {
+        formats::the_vst3_class_id_is_the_clap_ids_hash::<MxmClassicVerb>();
+    }
+
+    #[test]
+    fn the_vst3_categories_follow_the_clap_features() {
+        formats::the_vst3_categories_follow_the_clap_features::<MxmClassicVerb>();
+    }
+}
 
 fn valid_sample_rate(sample_rate: f32) -> f32 {
     mxm_dsp::guard::finite_or(sample_rate, 48_000.0).clamp(MIN_SAMPLE_RATE, MAX_SAMPLE_RATE)
