@@ -1,0 +1,12 @@
+room.json
+chamber.json
+hall.json
+plate.json
+lush-hall.json
+glass.json
+resonator.json
+gated-drums.json
+reverse-swell.json
+slapback-room.json
+ducked-plate.json
+wide-ambience.json

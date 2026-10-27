@@ -339,6 +339,13 @@ impl ClapPlugin for MxmClassicVerb {
         ClapFeature::Reverb,
         ClapFeature::Stereo,
     ];
+
+    // Its factory presets, for a host to list and load (`mxm_preset::clap`).
+    const CLAP_PRESETS: Option<ClapPresets> = Some(mxm_preset::clap::PRESETS);
+
+    fn preset_loader(&self) -> Option<Arc<dyn ClapPresetLoader>> {
+        Some(Arc::new(mxm_preset::clap::Loader(self.params.clone())))
+    }
 }
 
 impl Vst3Plugin for MxmClassicVerb {
